@@ -30,7 +30,7 @@ export default function Header() {
         <div className="hidden lg:flex items-center gap-10 text-[13px] font-medium tracking-[0.1em] uppercase">
           <Link href="/" className="hover:opacity-50 transition-opacity">Home</Link>
           <a href="#" className="hover:opacity-50 transition-opacity">Collections</a>
-          <a href="#" className="hover:opacity-50 transition-opacity">New</a>
+          <Link href="/cart"  className="hover:opacity-50 transition-opacity">Cart</Link>
         </div>
       </div>
 
@@ -59,12 +59,16 @@ export default function Header() {
           </div>
         </Link>
 
-        <button className="flex items-center justify-center rounded-full h-[50px] w-[50px] bg-[var(--color-accent)] text-[var(--color-on-accent)] hover:opacity-90 transition-opacity">
+        <Link
+          href="/login"
+          className="flex items-center justify-center rounded-full h-[50px] w-[50px] bg-[var(--color-accent)] text-[var(--color-on-accent)] hover:opacity-90 transition-opacity"
+          aria-label="Go to login page"
+        >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
-        </button>
+        </Link>
       </div>
     </nav>
   );

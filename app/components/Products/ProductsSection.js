@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import CardProducts from "../CardProducts/page";
+import CardProducts from "../CardProducts/CardProducts";
 import Header from "../Header/Header";
-
+import Footer from "../Footer/Footer";
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "2XL"];
 
 const getSizeById = (id) => SIZE_OPTIONS[id % SIZE_OPTIONS.length];
@@ -165,6 +165,7 @@ export default function ProductsSection() {
           )}
         </section>
       </div>
+      <Footer/>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CardProducts from "../CardProducts/page";
+import CardProducts from "../CardProducts/CardProducts";
 
 export default function NewWek() {
   const [products, setProducts] = useState([]);

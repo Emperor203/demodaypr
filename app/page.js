@@ -1,6 +1,7 @@
 import Header from "./components/Header/Header";
 import Image from "next/image";
-import NewWek from "./components/NewWek/page";
+import NewWek from "./components/NewWek/NewWek";
+import Footer from "./components/Footer/Footer";
 import Link from "next/link";
 
 export default function Home() {
@@ -59,6 +60,10 @@ export default function Home() {
 
         <div className="mt-10 container-custom">
           <NewWek />
+        </div>
+
+        <div className="container-custom">
+          <Footer />
         </div>
       </div>
     </div>
