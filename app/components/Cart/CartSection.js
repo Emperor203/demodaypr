@@ -11,10 +11,13 @@ export default function CartSection() {
 
   useEffect(() => {
     const sync = () => setItems(readCart());
+    sync();
     window.addEventListener("cart:updated", sync);
+    window.addEventListener("storage", sync);
 
     return () => {
       window.removeEventListener("cart:updated", sync);
+      window.removeEventListener("storage", sync);
     };
   }, []);
 
