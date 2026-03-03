@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import CardProducts from "../CardProducts/CardProducts";
+import Link from "next/link";
 
 export default function NewWek() {
   const [products, setProducts] = useState([]);
@@ -30,27 +31,27 @@ export default function NewWek() {
   }
 
   return (
-    <div className="w-full p-10 mt-20">
-      <div className="flex justify-between items-end mb-10">
-        <h1 className="text-4xl font-black uppercase tracking-tighter leading-none">
+    <div className="mt-10 w-full p-4 sm:p-6 md:mt-14 md:p-10">
+      <div className="mb-8 flex items-end justify-between md:mb-10">
+        <h1 className="text-3xl font-black uppercase leading-none tracking-tighter sm:text-4xl">
           New <br /> This Week
         </h1>
-        <span className="text-sm underline cursor-pointer uppercase font-bold text-[var(--foreground)]">
+        <Link href="/products" className="cursor-pointer text-xs font-bold uppercase text-[var(--foreground)] underline sm:text-sm">
           See All
-        </span>
+        </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-24">
+      <div className="mb-14 grid grid-cols-1 gap-5 sm:grid-cols-2 md:mb-24 md:grid-cols-4 md:gap-6">
         {products.slice(0, 4).map((item) => (
           <CardProducts key={item.id} product={item} />
         ))}
       </div>
 
-      <h1 className="text-7xl font-black uppercase italic leading-[0.75] tracking-tighter mb-12">
+      <h1 className="mb-8 text-4xl font-black uppercase italic leading-[0.78] tracking-tighter sm:text-6xl md:mb-12 md:text-7xl">
         XIV <br /> Collections <br /> 23-24
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-8">
         {products.slice(0, 3).map((item) => (
           <CardProducts key={item.id} product={item} />
         ))}

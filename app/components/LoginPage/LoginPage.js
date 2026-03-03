@@ -1,6 +1,7 @@
 "use client";
 
 import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Moon, Sun } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
@@ -58,11 +59,11 @@ export default function LoginPage() {
                 className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 text-xs font-semibold text-[var(--foreground)]"
                 aria-label="Switch color theme"
               >
-                {theme === "dark" ? "Light" : "Dark"}
+                {theme === "dark" ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
               </button>
             </div>
 
-            <h1 className={`${headingFont.className} mt-16 text-[54px] leading-[0.95] sm:text-[64px]`}>
+            <h1 className={`${headingFont.className} mt-10 text-[42px] leading-[0.95] sm:mt-16 sm:text-[64px]`}>
               Welcome back
             </h1>
             <p className="mt-3 text-[15px] text-[var(--color-muted)]">
@@ -71,7 +72,7 @@ export default function LoginPage() {
 
             <form className="mt-10 space-y-5" onSubmit={handleEmailSubmit}>
               <label className="block">
-                <span className={`${headingFont.className} mb-2 block text-[34px] leading-none`}>Email</span>
+                <span className={`${headingFont.className} mb-2 block text-[28px] leading-none sm:text-[34px]`}>Email</span>
                 <input
                   type="email"
                   placeholder="Enter your email"
@@ -80,7 +81,7 @@ export default function LoginPage() {
               </label>
 
               <label className="block">
-                <span className={`${headingFont.className} mb-2 block text-[34px] leading-none`}>Password</span>
+                <span className={`${headingFont.className} mb-2 block text-[28px] leading-none sm:text-[34px]`}>Password</span>
                 <input
                   type="password"
                   placeholder="********"
@@ -105,7 +106,7 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="mt-3 h-12 w-full bg-[var(--color-accent)] text-[25px] text-[var(--color-on-accent)] transition hover:opacity-90"
+                className="mt-3 h-12 w-full bg-[var(--color-accent)] text-xl text-[var(--color-on-accent)] transition hover:opacity-90 sm:text-[25px]"
               >
                 Sign In
               </button>
@@ -114,10 +115,10 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => handleProviderSignIn("google")}
                 disabled={isGoogleLoading || isGithubLoading}
-                className="flex h-12 w-full items-center justify-center gap-3 border border-[var(--color-border)] bg-[var(--color-surface)] text-[28px] text-[var(--foreground)] transition hover:bg-[var(--color-surface-soft)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-12 w-full items-center justify-center gap-2 border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[var(--foreground)] transition hover:bg-[var(--color-surface-soft)] disabled:cursor-not-allowed disabled:opacity-60 sm:gap-3"
               >
-                <span className="text-[19px] leading-none">{isGoogleLoading ? "..." : "G"}</span>
-                <span className={`${headingFont.className} text-[34px] leading-none`}>
+                <span className="text-sm leading-none sm:text-[19px]">{isGoogleLoading ? "..." : "G"}</span>
+                <span className={`${headingFont.className} text-xl leading-none sm:text-[34px]`}>
                   {isGoogleLoading ? "Redirecting..." : "Sign In with Google"}
                 </span>
               </button>
@@ -126,10 +127,10 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => handleProviderSignIn("github")}
                 disabled={isGithubLoading || isGoogleLoading}
-                className="flex h-12 w-full items-center justify-center gap-3 border border-[var(--color-border)] bg-[var(--color-surface)] text-[28px] text-[var(--foreground)] transition hover:bg-[var(--color-surface-soft)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-12 w-full items-center justify-center gap-2 border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[var(--foreground)] transition hover:bg-[var(--color-surface-soft)] disabled:cursor-not-allowed disabled:opacity-60 sm:gap-3"
               >
-                <span className="text-[19px] leading-none">{isGithubLoading ? "..." : "GH"}</span>
-                <span className={`${headingFont.className} text-[34px] leading-none`}>
+                <span className="text-sm leading-none sm:text-[19px]">{isGithubLoading ? "..." : "GH"}</span>
+                <span className={`${headingFont.className} text-xl leading-none sm:text-[34px]`}>
                   {isGithubLoading ? "Redirecting..." : "Sign In with GitHub"}
                 </span>
               </button>
@@ -142,7 +143,7 @@ export default function LoginPage() {
               ) : null}
             </form>
 
-            <p className="mt-16 text-center text-[15px] text-[var(--color-muted)]">
+            <p className="mt-12 text-center text-[15px] text-[var(--color-muted)] sm:mt-16">
               Don&apos;t have an account?{" "}
               <Link href="#" className="font-semibold text-[var(--foreground)] hover:underline">
                 Sign up

@@ -56,15 +56,15 @@ export default function ProductsSection() {
   }, [products, search, selectedSize, availability, selectedCategory]);
 
   return (
-    <div className="w-full bg-[var(--background)] p-6 md:p-10 text-[var(--foreground)] container-custom">
+    <div className="container-custom w-full bg-[var(--background)] py-4 text-[var(--foreground)] sm:py-6 md:py-10">
       <Header />
       <div className="mb-6">
         <p className="text-sm text-[var(--color-muted)]">Home / Products</p>
-        <h1 className="text-4xl font-black uppercase tracking-tight mt-1">Products</h1>
+        <h1 className="mt-1 text-3xl font-black uppercase tracking-tight sm:text-4xl">Products</h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <aside className="lg:col-span-3 space-y-8">
+        <aside className="space-y-8 lg:col-span-3">
           <h2 className="text-xl font-bold">Filters</h2>
 
           <div>
@@ -124,7 +124,7 @@ export default function ProductsSection() {
                   key={category}
                   type="button"
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-3 py-2 border text-xs uppercase ${
+                    className={`px-3 py-2 border text-[11px] uppercase sm:text-xs ${
                     selectedCategory === category
                       ? "bg-[var(--color-accent)] text-[var(--color-on-accent)] border-[var(--color-accent)]"
                       : "bg-[var(--color-surface)] border-[var(--color-border)]"
@@ -138,7 +138,7 @@ export default function ProductsSection() {
         </aside>
 
         <section className="lg:col-span-9">
-          <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">
+          <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center">
             <input
               type="text"
               value={search}

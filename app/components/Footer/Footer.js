@@ -2,15 +2,14 @@ import React from "react";
 import Image from "next/image";
 
 const infoLinks = ["Pricing", "About", "Contacts"];
-const languages = ["Eng", "Esp", "Sve"];
 
 export default function Footer() {
   return (
-    <footer className="mt-24 border-t border-[var(--color-border)] pt-16 pb-20 text-[var(--foreground)]">
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-[180px_1fr] lg:grid-cols-[220px_1fr]">
-        <div className="space-y-16 text-[12px] uppercase tracking-[0.18em] text-[var(--color-muted)]">
+    <footer className="mt-16 border-t border-[var(--color-border)] pb-14 pt-10 text-[var(--foreground)] sm:mt-20 sm:pt-12 md:mt-24 md:pb-20 md:pt-16">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-[180px_1fr] md:gap-12 lg:grid-cols-[220px_1fr]">
+        <div className="grid grid-cols-2 gap-8 text-[12px] uppercase tracking-[0.18em] text-[var(--color-muted)] md:grid-cols-1 md:space-y-16 md:gap-0">
           <div>
-            <p className="mb-7">Info</p>
+            <p className="mb-4 md:mb-7">Info</p>
             <ul className="space-y-2 text-[15px] tracking-[0.1em] text-[var(--foreground)]/80">
               {infoLinks.map((item) => (
                 <li key={item} className="cursor-pointer transition hover:text-[var(--foreground)]">
@@ -21,22 +20,19 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="mb-7">Languages</p>
-            <ul className="space-y-2 text-[15px] tracking-[0.1em] text-[var(--foreground)]/80">
-              {languages.map((lang) => (
-                <li key={lang} className="cursor-pointer transition hover:text-[var(--foreground)]">
-                  {lang}
-                </li>
-              ))}
+            <p className="mb-4 md:mb-7">Contact</p>
+            <ul className="space-y-2 text-[15px] tracking-[0.04em] normal-case text-[var(--foreground)]/80">
+              <li className="break-all">farmonovabdurahmon7gmail@.com</li>
+              <li>+998 94 236 67 05</li>
             </ul>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[minmax(260px,420px)_1fr] md:items-start">
           <div>
-            <p className="mb-5 text-[12px] uppercase tracking-[0.18em] text-[var(--color-muted)] ml-20">Technologies</p>
+            <p className="mb-5 text-[12px] uppercase tracking-[0.18em] text-[var(--color-muted)] md:ml-28 lg:ml-36">Technologies</p>
 
-            <div className="space-y-1 leading-[0.82] ml-20">
+            <div className="space-y-1 leading-[0.82] md:ml-28 lg:ml-36">
               <div className="relative mb-2 h-16 w-40">
                 <Image
                   src="/footerlogo.svg"
@@ -51,7 +47,7 @@ export default function Footer() {
           </div>
 
           <div className="pt-0 md:pt-[86px]">
-            <p className="inline-flex items-center gap-4 text-[14px] text-[var(--color-muted)]">
+            <p className="inline-flex items-center gap-3 text-[13px] text-[var(--color-muted)] sm:gap-4 sm:text-[14px]">
               <span>Near-field communication</span>
               <span className="inline-block h-px w-14 bg-[var(--color-border)]" />
             </p>

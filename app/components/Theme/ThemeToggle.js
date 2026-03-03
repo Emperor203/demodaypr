@@ -1,18 +1,19 @@
 "use client";
 
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
 export default function ThemeToggle() {
-  const { toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      className="fixed right-4 top-4 z-50 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[var(--color-foreground)] shadow-sm"
+      className="fixed right-3 top-3 z-50 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] p-2 text-[var(--color-foreground)] shadow-sm sm:right-4 sm:top-4"
       aria-label="Toggle theme"
     >
-      Theme
+      {theme === "dark" ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
     </button>
   );
 }

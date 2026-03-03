@@ -1,8 +1,9 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-html, body{
-  height: 100vh;
+html,
+body {
+  min-height: 100%;
 }
 :root,
 [data-theme="light"] {
@@ -38,8 +39,22 @@ html, body{
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 52px;
-  padding-right: 52px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 640px) {
+  .container-custom {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-custom {
+    padding-left: 52px;
+    padding-right: 52px;
+  }
 }
 
 body {

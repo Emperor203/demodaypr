@@ -6,17 +6,17 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="w-full min-h-screen bg-[var(--background)] bg-cover bg-center text-[var(--foreground)] container-custom">
-      <div className="p-6 md:p-12">
+    <div className="min-h-screen w-full bg-[var(--background)] bg-cover bg-center text-[var(--foreground)]">
+      <div className="container-custom py-4 sm:py-6 md:py-8">
         <Header />
 
-        <main className="mt-10 grid grid-cols-12 gap-4 container-custom">
-          <div className="col-span-4 flex flex-col justify-between min-h-[550px]">
-            <div className="space-y-10">
+        <main className="mt-6 grid grid-cols-1 gap-8 lg:mt-10 lg:grid-cols-12 lg:gap-6">
+          <div className="flex min-h-[420px] flex-col justify-between lg:col-span-4 lg:min-h-[550px]">
+            <div className="space-y-7 sm:space-y-8 lg:space-y-10">
               <ul className="space-y-2 font-bold">
-                <li className="cursor-pointer hover:opacity-60 transition text-5xl">MEN</li>
-                <li className="cursor-pointer hover:opacity-60 transition text-5xl">WOMEN</li>
-                <li className="cursor-pointer hover:opacity-60 transition text-5xl">KIDS</li>
+                <li className="cursor-pointer text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">MEN</li>
+                <li className="cursor-pointer text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">WOMEN</li>
+                <li className="cursor-pointer text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">KIDS</li>
               </ul>
 
               <div className="relative group w-full max-w-[280px]">
@@ -29,7 +29,7 @@ export default function Home() {
               </div>
 
               <div className="pt-4">
-                <h1 className="text-[85px] font-black leading-[0.8] tracking-tighter uppercase italic opacity-90">
+                <h1 className="text-[44px] font-black uppercase italic leading-[0.8] tracking-tighter opacity-90 sm:text-[64px] lg:text-[85px]">
                   NEW <br /> COLLECTION
                 </h1>
 
@@ -40,29 +40,29 @@ export default function Home() {
             </div>
 
             <Link href="/products">
-              <button className="flex items-center justify-between w-[240px] transition px-6 py-5 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-soft)] hover:opacity-90">
+              <button className="flex w-full max-w-[240px] items-center justify-between rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-6 py-4 transition hover:opacity-90 sm:py-5">
                 <span className="text-[11px] font-bold uppercase tracking-widest">Go To Shop</span>
                 &#8594;
               </button>
             </Link>
           </div>
 
-          <div className="col-span-8 flex items-start gap-8 pt-40 pl-50">
-            <div className="relative w-[366px] h-[376px] overflow-hidden bg-[var(--color-surface)]">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-8 lg:gap-8 lg:pt-24 xl:pt-40">
+            <div className="relative h-[320px] overflow-hidden bg-[var(--color-surface)] sm:h-[360px] lg:h-[376px]">
               <Image src="/model1.png" alt="Collection 1" fill className="object-cover object-top" priority />
             </div>
 
-            <div className="relative w-[366px] h-[376px] overflow-hidden bg-[var(--color-surface)]">
+            <div className="relative h-[320px] overflow-hidden bg-[var(--color-surface)] sm:h-[360px] lg:h-[376px]">
               <Image src="/model2.png" alt="Collection 2" fill className="object-cover object-top" />
             </div>
           </div>
         </main>
 
-        <div className="mt-10 container-custom">
+        <div className="mt-8 sm:mt-10">
           <NewWek />
         </div>
 
-        <div className="container-custom">
+        <div>
           <Footer />
         </div>
       </div>
