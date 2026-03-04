@@ -14,9 +14,21 @@ export default function Home() {
           <div className="flex min-h-[420px] flex-col justify-between lg:col-span-4 lg:min-h-[550px]">
             <div className="space-y-7 sm:space-y-8 lg:space-y-10">
               <ul className="space-y-2 font-bold">
-                <li className="cursor-pointer text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">MEN</li>
-                <li className="cursor-pointer text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">WOMEN</li>
-                <li className="cursor-pointer text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">KIDS</li>
+                <li>
+                  <Link href="/products?audience=men" className="text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">
+                    MEN
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/products?audience=women" className="text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">
+                    WOMEN
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/products?audience=kids" className="text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">
+                    KIDS
+                  </Link>
+                </li>
               </ul>
 
               <div className="relative group w-full max-w-[280px]">
@@ -48,12 +60,12 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-8 lg:gap-8 lg:pt-24 xl:pt-40">
-            <div className="relative h-[320px] overflow-hidden bg-[var(--color-surface)] sm:h-[360px] lg:h-[376px]">
-              <Image src="/model1.png" alt="Collection 1" fill className="object-cover object-top" priority />
+            <div className="relative flex h-[320px] items-center justify-center overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface)] sm:h-[360px] lg:h-[376px]">
+              <Image src="/model1.png" alt="Collection 1" fill className="object-contain p-3" priority />
             </div>
 
-            <div className="relative h-[320px] overflow-hidden bg-[var(--color-surface)] sm:h-[360px] lg:h-[376px]">
-              <Image src="/model2.png" alt="Collection 2" fill className="object-cover object-top" />
+            <div className="relative flex h-[320px] items-center justify-center overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface)] sm:h-[360px] lg:h-[376px]">
+              <Image src="/model2.png" alt="Collection 2" fill className="object-contain p-3" />
             </div>
           </div>
         </main>

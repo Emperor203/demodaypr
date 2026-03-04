@@ -1,15 +1,26 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import CardProducts from "../CardProducts/CardProducts";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import kidsProducts from "../../Products";
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "2XL"];
+const AUDIENCE_OPTIONS = new Set(["men", "women", "kids"]);
+const KIDS_CATEGORIES = new Set([
+  "boys clothing",
+  "girls clothing",
+  "toddler clothing",
+  "baby clothing",
+  "unisex kids clothing",
+]);
 
 const getSizeById = (id) => SIZE_OPTIONS[id % SIZE_OPTIONS.length];
 const isInStock = (product) => (product?.rating?.count ?? 0) >= 120;
 
 export default function ProductsSection() {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -19,15 +30,22 @@ export default function ProductsSection() {
   const [availability, setAvailability] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
+  const selectedAudience = useMemo(() => {
+    const raw = (searchParams.get("audience") || "").toLowerCase();
+    return AUDIENCE_OPTIONS.has(raw) ? raw : "all";
+  }, [searchParams]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch("https://fakestoreapi.com/products");
         const data = await response.json();
-        setProducts(data);
+        const apiProducts = Array.isArray(data) ? data : [];
+        setProducts([...apiProducts, ...kidsProducts]);
       } catch (fetchError) {
         setError("Failed to load products");
         console.error(fetchError);
+        setProducts(kidsProducts);
       } finally {
         setLoading(false);
       }
@@ -50,10 +68,16 @@ export default function ProductsSection() {
         (availability === "in" && isInStock(product)) ||
         (availability === "out" && !isInStock(product));
       const categoryMatch = selectedCategory === "all" || product.category === selectedCategory;
+      const normalizedCategory = (product.category || "").toLowerCase();
+      const audienceMatch =
+        selectedAudience === "all" ||
+        (selectedAudience === "men" && normalizedCategory === "men's clothing") ||
+        (selectedAudience === "women" && normalizedCategory === "women's clothing") ||
+        (selectedAudience === "kids" && KIDS_CATEGORIES.has(normalizedCategory));
 
-      return titleMatch && sizeMatch && availabilityMatch && categoryMatch;
+      return titleMatch && sizeMatch && availabilityMatch && categoryMatch && audienceMatch;
     });
-  }, [products, search, selectedSize, availability, selectedCategory]);
+  }, [products, search, selectedSize, availability, selectedCategory, selectedAudience]);
 
   return (
     <div className="container-custom w-full bg-[var(--background)] py-4 text-[var(--foreground)] sm:py-6 md:py-10">
@@ -152,11 +176,11 @@ export default function ProductsSection() {
           {loading && <p className="uppercase text-sm">Loading products...</p>}
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          {!loading && !error && filteredProducts.length === 0 && (
+          {!loading && filteredProducts.length === 0 && (
             <p className="text-sm text-[var(--color-muted)]">No products found for selected filters.</p>
           )}
 
-          {!loading && !error && filteredProducts.length > 0 && (
+          {!loading && filteredProducts.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredProducts.map((product) => (
                 <CardProducts key={product.id} product={product} />

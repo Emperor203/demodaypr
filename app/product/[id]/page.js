@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Header from "../../components/Header/Header";
+import kidsProducts from "../../Products";
 
 async function getProduct(id) {
   const numericId = Number(id);
@@ -21,24 +22,22 @@ async function getProduct(id) {
     }
   } catch {}
 
-  // Fallback for intermittent upstream failures on serverless deploys.
   try {
     const listResponse = await fetch("https://fakestoreapi.com/products", {
       next: { revalidate: 300 },
     });
-    if (!listResponse.ok) {
-      return null;
+    if (listResponse.ok) {
+      const products = await listResponse.json();
+      if (Array.isArray(products)) {
+        const foundApiProduct = products.find((item) => Number(item.id) === numericId);
+        if (foundApiProduct) {
+          return foundApiProduct;
+        }
+      }
     }
+  } catch {}
 
-    const products = await listResponse.json();
-    if (!Array.isArray(products)) {
-      return null;
-    }
-
-    return products.find((item) => Number(item.id) === numericId) ?? null;
-  } catch {
-    return null;
-  }
+  return kidsProducts.find((item) => Number(item.id) === numericId) ?? null;
 }
 
 export default async function ProductDetailsPage({ params }) {
