@@ -5,7 +5,7 @@ import { Moon, Sun } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useTheme } from "../Theme/ThemeProvider";
 
 const headingFont = Cormorant_Garamond({
@@ -20,10 +20,17 @@ const bodyFont = Manrope({
 
 export default function LoginPage() {
   const { theme, toggleTheme } = useTheme();
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
   const [isGithubLoading, setIsGithubLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [formMessage, setFormMessage] = useState("");
+
+  const isDark = mounted && theme === "dark";
 
   const handleProviderSignIn = async (provider) => {
     const setLoading = provider === "github" ? setIsGithubLoading : setIsGoogleLoading;
@@ -59,7 +66,7 @@ export default function LoginPage() {
                 className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 text-xs font-semibold text-[var(--foreground)]"
                 aria-label="Switch color theme"
               >
-                {theme === "dark" ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
+                {isDark ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
               </button>
             </div>
 
@@ -117,7 +124,11 @@ export default function LoginPage() {
                 disabled={isGoogleLoading || isGithubLoading}
                 className="flex h-12 w-full items-center justify-center gap-2 border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[var(--foreground)] transition hover:bg-[var(--color-surface-soft)] disabled:cursor-not-allowed disabled:opacity-60 sm:gap-3"
               >
-                <span className="text-sm leading-none sm:text-[19px]">{isGoogleLoading ? "..." : "G"}</span>
+                {isGoogleLoading ? (
+                  <span className="text-sm leading-none sm:text-[19px]">...</span>
+                ) : (
+                  <Image src="/googlelogo.svg" alt="Google" width={20} height={20} className="h-5 w-5" />
+                )}
                 <span className={`${headingFont.className} text-xl leading-none sm:text-[34px]`}>
                   {isGoogleLoading ? "Redirecting..." : "Sign In with Google"}
                 </span>
@@ -129,7 +140,11 @@ export default function LoginPage() {
                 disabled={isGithubLoading || isGoogleLoading}
                 className="flex h-12 w-full items-center justify-center gap-2 border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[var(--foreground)] transition hover:bg-[var(--color-surface-soft)] disabled:cursor-not-allowed disabled:opacity-60 sm:gap-3"
               >
-                <span className="text-sm leading-none sm:text-[19px]">{isGithubLoading ? "..." : "GH"}</span>
+                {isGithubLoading ? (
+                  <span className="text-sm leading-none sm:text-[19px]">...</span>
+                ) : (
+                  <Image src="/githublogo.svg" alt="GitHub" width={20} height={20} className="h-5 w-5" />
+                )}
                 <span className={`${headingFont.className} text-xl leading-none sm:text-[34px]`}>
                   {isGithubLoading ? "Redirecting..." : "Sign In with GitHub"}
                 </span>

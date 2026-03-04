@@ -3,11 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import { getCartCount, readCart } from "../../lib/cart";
 
 export default function Header() {
   const [cartCount, setCartCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: session } = useSession();
+  const isAuthenticated = Boolean(session?.user);
 
   useEffect(() => {
     const sync = () => setCartCount(getCartCount(readCart()));
@@ -20,6 +23,10 @@ export default function Header() {
       window.removeEventListener("storage", sync);
     };
   }, []);
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/login" });
+  };
 
   return (
     <nav className="relative grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 py-3 text-[var(--foreground)] sm:gap-4 sm:py-4">
@@ -61,16 +68,31 @@ export default function Header() {
           </div>
         </Link>
 
-        <Link
-          href="/login"
-          className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-on-accent)] transition-opacity hover:opacity-90 sm:h-[50px] sm:w-[50px]"
-          aria-label="Go to login page"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-        </Link>
+        {isAuthenticated ? (
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-on-accent)] transition-opacity hover:opacity-90 sm:h-[50px] sm:w-[50px]"
+            aria-label="Logout"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <path d="m16 17 5-5-5-5" />
+              <path d="M21 12H9" />
+            </svg>
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-on-accent)] transition-opacity hover:opacity-90 sm:h-[50px] sm:w-[50px]"
+            aria-label="Go to login page"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </Link>
+        )}
       </div>
 
       {isMobileMenuOpen ? (
@@ -82,9 +104,22 @@ export default function Header() {
             <Link href="/cart" className="hover:opacity-60" onClick={() => setIsMobileMenuOpen(false)}>
               Cart
             </Link>
-            <Link href="/login" className="hover:opacity-60" onClick={() => setIsMobileMenuOpen(false)}>
-              Login
-            </Link>
+            {isAuthenticated ? (
+              <button
+                type="button"
+                className="text-left hover:opacity-60"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleLogout();
+                }}
+              >
+                Logout
+              </button>
+            ) : (
+              <Link href="/login" className="hover:opacity-60" onClick={() => setIsMobileMenuOpen(false)}>
+                Login
+              </Link>
+            )}
           </div>
         </div>
       ) : null}
