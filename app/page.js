@@ -41,7 +41,7 @@ export default function Home() {
               </div>
 
               <div className="pt-4">
-                <h1 className="text-[44px] font-black uppercase italic leading-[0.8] tracking-tighter opacity-90 sm:text-[64px] lg:text-[85px]">
+                <h1 className="max-w-[360px] text-[44px] font-black uppercase italic leading-[0.8] tracking-tighter opacity-90 sm:max-w-[430px] sm:text-[56px] lg:max-w-[500px] lg:text-[64px] xl:text-[72px]">
                   NEW <br /> COLLECTION
                 </h1>
 
