@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "../../components/Header/Header";
@@ -27,48 +31,71 @@ function normalizeProduct(raw) {
   };
 }
 
-async function getProduct(id) {
-  const numericId = Number(id);
-  if (!numericId || Number.isNaN(numericId)) {
-    return null;
-  }
+export default function ProductDetailsPage() {
+  const params = useParams();
+  const numericId = useMemo(() => Number(params?.id), [params?.id]);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const localKidsProduct = kidsProducts.find((item) => Number(item.id) === numericId);
-  if (localKidsProduct) {
-    return normalizeProduct(localKidsProduct);
-  }
+  useEffect(() => {
+    let active = true;
 
-  try {
-    const response = await fetch(`https://fakestoreapi.com/products/${numericId}`);
-
-    if (response.ok) {
-      const product = normalizeProduct(await response.json());
-      if (product) {
-        return product;
-      }
-    }
-  } catch {}
-
-  try {
-    const listResponse = await fetch("https://fakestoreapi.com/products");
-    if (listResponse.ok) {
-      const products = await listResponse.json();
-      if (Array.isArray(products)) {
-        const foundApiProduct = products.find((item) => Number(item?.id) === numericId);
-        if (foundApiProduct) {
-          return normalizeProduct(foundApiProduct);
+    const load = async () => {
+      if (!numericId || Number.isNaN(numericId)) {
+        if (active) {
+          setProduct(null);
+          setLoading(false);
         }
+        return;
       }
-    }
-  } catch {}
 
-  return null;
-}
+      const localKidsProduct = kidsProducts.find((item) => Number(item.id) === numericId);
+      if (localKidsProduct) {
+        if (active) {
+          setProduct(normalizeProduct(localKidsProduct));
+          setLoading(false);
+        }
+        return;
+      }
 
-export default async function ProductDetailsPage({ params }) {
-  const resolvedParams = await Promise.resolve(params);
-  const id = resolvedParams?.id;
-  const product = await getProduct(id);
+      try {
+        const response = await fetch(`https://fakestoreapi.com/products/${numericId}`);
+        if (response.ok) {
+          const direct = normalizeProduct(await response.json());
+          if (direct && active) {
+            setProduct(direct);
+            setLoading(false);
+            return;
+          }
+        }
+      } catch {}
+
+      try {
+        const listResponse = await fetch("https://fakestoreapi.com/products");
+        if (listResponse.ok) {
+          const products = await listResponse.json();
+          if (Array.isArray(products)) {
+            const found = products.find((item) => Number(item?.id) === numericId);
+            if (found && active) {
+              setProduct(normalizeProduct(found));
+              setLoading(false);
+              return;
+            }
+          }
+        }
+      } catch {}
+
+      if (active) {
+        setProduct(null);
+        setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      active = false;
+    };
+  }, [numericId]);
 
   return (
     <div className="w-full bg-[var(--background)] p-6 md:p-10 text-[var(--foreground)] container-custom min-h-screen">
@@ -87,7 +114,11 @@ export default async function ProductDetailsPage({ params }) {
         </p>
       </div>
 
-      {product ? (
+      {loading ? (
+        <div className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+          <p className="text-sm uppercase">Loading product...</p>
+        </div>
+      ) : product ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <div className="relative w-full h-[460px] border border-[var(--color-border)] bg-[var(--color-surface)]">
             <Image
@@ -101,12 +132,8 @@ export default async function ProductDetailsPage({ params }) {
           </div>
 
           <div className="space-y-5">
-            <p className="text-xs uppercase tracking-wide text-[var(--color-muted)]">
-              {product.category}
-            </p>
-            <h1 className="text-3xl md:text-4xl font-black leading-tight">
-              {product.title}
-            </h1>
+            <p className="text-xs uppercase tracking-wide text-[var(--color-muted)]">{product.category}</p>
+            <h1 className="text-3xl md:text-4xl font-black leading-tight">{product.title}</h1>
             <p className="text-2xl font-bold">${product.price}</p>
 
             <div className="text-sm text-[var(--color-muted)]">
