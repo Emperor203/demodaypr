@@ -3,45 +3,71 @@ import Link from "next/link";
 import Header from "../../components/Header/Header";
 import kidsProducts from "../../Products";
 
+function normalizeProduct(raw) {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+
+  const id = Number(raw.id);
+  if (!id || Number.isNaN(id)) {
+    return null;
+  }
+
+  return {
+    id,
+    title: typeof raw.title === "string" && raw.title.trim() ? raw.title : "Untitled product",
+    price: Number(raw.price) || 0,
+    description:
+      typeof raw.description === "string" && raw.description.trim()
+        ? raw.description
+        : "No description available.",
+    category: typeof raw.category === "string" && raw.category.trim() ? raw.category : "uncategorized",
+    image: typeof raw.image === "string" && raw.image.trim() ? raw.image : "/next.svg",
+    rating: raw.rating && typeof raw.rating === "object" ? raw.rating : { rate: "-", count: 0 },
+  };
+}
+
 async function getProduct(id) {
   const numericId = Number(id);
   if (!numericId || Number.isNaN(numericId)) {
     return null;
   }
 
+  const localKidsProduct = kidsProducts.find((item) => Number(item.id) === numericId);
+  if (localKidsProduct) {
+    return normalizeProduct(localKidsProduct);
+  }
+
   try {
-    const response = await fetch(`https://fakestoreapi.com/products/${numericId}`, {
-      next: { revalidate: 300 },
-    });
+    const response = await fetch(`https://fakestoreapi.com/products/${numericId}`);
 
     if (response.ok) {
-      const product = await response.json();
-      if (product && product.id) {
+      const product = normalizeProduct(await response.json());
+      if (product) {
         return product;
       }
     }
   } catch {}
 
   try {
-    const listResponse = await fetch("https://fakestoreapi.com/products", {
-      next: { revalidate: 300 },
-    });
+    const listResponse = await fetch("https://fakestoreapi.com/products");
     if (listResponse.ok) {
       const products = await listResponse.json();
       if (Array.isArray(products)) {
-        const foundApiProduct = products.find((item) => Number(item.id) === numericId);
+        const foundApiProduct = products.find((item) => Number(item?.id) === numericId);
         if (foundApiProduct) {
-          return foundApiProduct;
+          return normalizeProduct(foundApiProduct);
         }
       }
     }
   } catch {}
 
-  return kidsProducts.find((item) => Number(item.id) === numericId) ?? null;
+  return null;
 }
 
 export default async function ProductDetailsPage({ params }) {
-  const { id } = await params;
+  const resolvedParams = await Promise.resolve(params);
+  const id = resolvedParams?.id;
   const product = await getProduct(id);
 
   return (
