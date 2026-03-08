@@ -9,6 +9,7 @@ import { getCartCount, readCart } from "../../lib/cart";
 export default function Header() {
   const [cartCount, setCartCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { data: session } = useSession();
   const isAuthenticated = Boolean(session?.user);
 
@@ -24,12 +25,25 @@ export default function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const handleLogout = () => {
     signOut({ callbackUrl: "/login" });
   };
 
   return (
-    <nav className="relative grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 py-3 text-[var(--foreground)] sm:gap-4 sm:py-4">
+    <nav
+      className={`sticky top-2 z-40 grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 rounded-2xl px-3 py-3 text-[var(--foreground)] transition-all duration-300 sm:gap-4 sm:px-4 sm:py-4 ${
+        isScrolled
+          ? "bg-liquid-glass border border-[var(--color-border)] shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+          : "border border-transparent"
+      }`}
+    >
       <div className="flex items-center gap-3 sm:gap-6">
         <button
           type="button"

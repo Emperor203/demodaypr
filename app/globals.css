@@ -15,6 +15,9 @@ body {
   --color-border: #d1d5db;
   --color-accent: #111827;
   --color-on-accent: #f9fafb;
+  --header-glass: rgba(255, 255, 255, 0.72);
+  --accent-glass: rgba(17, 24, 39, 0.84);
+  --surface-glass: rgba(255, 255, 255, 0.72);
 }
 
 [data-theme="dark"] {
@@ -26,6 +29,9 @@ body {
   --color-border: #334155;
   --color-accent: #e2e8f0;
   --color-on-accent: #0f172a;
+  --header-glass: rgba(17, 24, 39, 0.72);
+  --accent-glass: rgba(226, 232, 240, 0.82);
+  --surface-glass: rgba(17, 24, 39, 0.78);
 }
 
 @theme inline {
@@ -67,4 +73,73 @@ body {
 input,
 button {
   transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+.glass-accent {
+  background: var(--accent-glass);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+}
+
+.glass-surface {
+  background: var(--surface-glass);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+}
+
+@layer utilities {
+  .bg-liquid-glass {
+    background: var(--header-glass);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+}
+
+@supports not (hanging-punctuation: first) {
+  .bg-liquid-glass {
+    backdrop-filter: url(#displacementFilter) blur(2px);
+  }
+}
+
+.liquid-cta {
+  position: relative;
+  isolation: isolate;
+}
+
+.liquid-cta::before {
+  content: "";
+  position: absolute;
+  inset: -6px -10px;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 90deg at 50% 50%,
+    rgba(239, 68, 68, 0.95),
+    rgba(59, 130, 246, 0.95),
+    rgba(239, 68, 68, 0.95)
+  );
+  filter: blur(10px) saturate(125%);
+  z-index: -2;
+  opacity: 0.85;
+  animation: liquid-shift 6s linear infinite;
+}
+
+.liquid-cta::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 9999px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  z-index: -1;
+}
+
+@keyframes liquid-shift {
+  0% {
+    transform: translateX(-2px) scaleX(1);
+  }
+  50% {
+    transform: translateX(2px) scaleX(1.03);
+  }
+  100% {
+    transform: translateX(-2px) scaleX(1);
+  }
 }

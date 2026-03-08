@@ -7,16 +7,34 @@ export default function NewWek() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const normalizeProduct = (item) => ({
+    id: Number(item?.id),
+    title: typeof item?.title === "string" && item.title.trim() ? item.title : "Untitled product",
+    price: Number(item?.price) || 0,
+    description: typeof item?.description === "string" ? item.description : "",
+    category: typeof item?.category === "string" ? item.category : "uncategorized",
+    image:
+      (typeof item?.thumbnail === "string" && item.thumbnail.trim()) ||
+      (typeof item?.image === "string" && item.image.trim()) ||
+      "/next.svg",
+    rating: {
+      rate: Number(item?.rating) || 0,
+      count: Number(item?.stock) || 0,
+    },
+  });
+
   useEffect(() => {
     const fetchClothing = async () => {
       try {
         const [mensRes, womensRes] = await Promise.all([
-          fetch("https://fakestoreapi.com/products/category/men's clothing"),
-          fetch("https://fakestoreapi.com/products/category/women's clothing"),
+          fetch("https://dummyjson.com/products/category/mens-shirts?limit=20"),
+          fetch("https://dummyjson.com/products/category/womens-dresses?limit=20"),
         ]);
-        const mens = await mensRes.json();
-        const womens = await womensRes.json();
-        setProducts([...mens, ...womens]);
+        const mensData = await mensRes.json();
+        const womensData = await womensRes.json();
+        const mens = Array.isArray(mensData?.products) ? mensData.products.map(normalizeProduct) : [];
+        const womens = Array.isArray(womensData?.products) ? womensData.products.map(normalizeProduct) : [];
+        setProducts([...mens, ...womens].filter((item) => item.id));
       } catch (err) {
         console.error(err);
       } finally {

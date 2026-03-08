@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "../../components/Header/Header";
 import kidsProducts from "../../Products";
+import { addToCart } from "../../lib/cart";
 
 function normalizeProduct(raw) {
   if (!raw || typeof raw !== "object") {
@@ -26,8 +27,14 @@ function normalizeProduct(raw) {
         ? raw.description
         : "No description available.",
     category: typeof raw.category === "string" && raw.category.trim() ? raw.category : "uncategorized",
-    image: typeof raw.image === "string" && raw.image.trim() ? raw.image : "/next.svg",
-    rating: raw.rating && typeof raw.rating === "object" ? raw.rating : { rate: "-", count: 0 },
+    image:
+      (typeof raw.image === "string" && raw.image.trim()) ||
+      (typeof raw.thumbnail === "string" && raw.thumbnail.trim()) ||
+      "/next.svg",
+    rating: {
+      rate: Number(raw?.rating?.rate) || Number(raw?.rating) || 0,
+      count: Number(raw?.rating?.count) || Number(raw?.stock) || 0,
+    },
   };
 }
 
@@ -36,6 +43,7 @@ export default function ProductDetailsPage() {
   const numericId = useMemo(() => Number(params?.id), [params?.id]);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -59,7 +67,7 @@ export default function ProductDetailsPage() {
       }
 
       try {
-        const response = await fetch(`https://fakestoreapi.com/products/${numericId}`);
+        const response = await fetch(`https://dummyjson.com/products/${numericId}`);
         if (response.ok) {
           const direct = normalizeProduct(await response.json());
           if (direct && active) {
@@ -71,9 +79,10 @@ export default function ProductDetailsPage() {
       } catch {}
 
       try {
-        const listResponse = await fetch("https://fakestoreapi.com/products");
+        const listResponse = await fetch("https://dummyjson.com/products?limit=0");
         if (listResponse.ok) {
-          const products = await listResponse.json();
+          const payload = await listResponse.json();
+          const products = Array.isArray(payload?.products) ? payload.products : [];
           if (Array.isArray(products)) {
             const found = products.find((item) => Number(item?.id) === numericId);
             if (found && active) {
@@ -96,6 +105,16 @@ export default function ProductDetailsPage() {
       active = false;
     };
   }, [numericId]);
+
+  const handleAddToCart = () => {
+    if (!product) {
+      return;
+    }
+
+    addToCart(product);
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1200);
+  };
 
   return (
     <div className="w-full bg-[var(--background)] p-6 md:p-10 text-[var(--foreground)] container-custom min-h-screen">
@@ -143,6 +162,13 @@ export default function ProductDetailsPage() {
             <p className="text-base leading-7 max-w-[700px]">{product.description}</p>
 
             <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="px-5 py-3 border border-[var(--color-border)] bg-[var(--color-surface-soft)] hover:opacity-90"
+              >
+                {added ? "Added" : "Add to cart"}
+              </button>
               <Link
                 href="/products"
                 className="px-5 py-3 border border-[var(--color-border)] bg-[var(--color-surface)] hover:opacity-90"

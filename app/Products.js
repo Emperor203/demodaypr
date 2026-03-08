@@ -1,6 +1,6 @@
 const products = [
   {
-    id: 101,
+    id: 1001,
     title: "Kids Cotton T-Shirt Dino",
     price: 14.99,
     description: "Soft cotton T-shirt with dinosaur print for everyday play.",
@@ -9,7 +9,7 @@ const products = [
     rating: { rate: 4.7, count: 180 },
   },
   {
-    id: 102,
+    id: 1002,
     title: "Girls Floral Summer Dress",
     price: 22.5,
     description: "Lightweight floral dress with breathable fabric for warm days.",
@@ -18,7 +18,7 @@ const products = [
     rating: { rate: 4.8, count: 145 },
   },
   {
-    id: 103,
+    id: 1003,
     title: "Toddler Cozy Hoodie",
     price: 26.0,
     description: "Warm hoodie with front pocket and soft brushed inner layer.",
@@ -27,7 +27,7 @@ const products = [
     rating: { rate: 4.6, count: 95 },
   },
   {
-    id: 104,
+    id: 1004,
     title: "Kids Denim Overalls",
     price: 31.99,
     description: "Durable denim overalls with adjustable straps and side buttons.",
@@ -36,7 +36,7 @@ const products = [
     rating: { rate: 4.5, count: 132 },
   },
   {
-    id: 105,
+    id: 1005,
     title: "Boys Sport Shorts Set",
     price: 19.99,
     description: "Two-piece shorts set designed for active play and comfort.",
@@ -45,7 +45,7 @@ const products = [
     rating: { rate: 4.4, count: 88 },
   },
   {
-    id: 106,
+    id: 1006,
     title: "Girls Knit Cardigan",
     price: 24.99,
     description: "Button-up knit cardigan, easy to layer for school or outings.",
@@ -54,7 +54,7 @@ const products = [
     rating: { rate: 4.9, count: 210 },
   },
   {
-    id: 107,
+    id: 1007,
     title: "Baby Romper 3-Pack",
     price: 17.49,
     description: "Set of three baby rompers with snap buttons and stretch fit.",
@@ -63,7 +63,7 @@ const products = [
     rating: { rate: 4.7, count: 170 },
   },
   {
-    id: 108,
+    id: 1008,
     title: "Kids Rain Jacket",
     price: 29.5,
     description: "Water-resistant jacket with hood and reflective details.",

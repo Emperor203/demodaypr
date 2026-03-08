@@ -8,6 +8,16 @@ import Footer from "../Footer/Footer";
 import kidsProducts from "../../Products";
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "2XL"];
 const AUDIENCE_OPTIONS = new Set(["men", "women", "kids"]);
+const MEN_CATEGORIES = new Set(["men's clothing", "mens-shirts", "mens-shoes", "mens-watches"]);
+const WOMEN_CATEGORIES = new Set([
+  "women's clothing",
+  "womens-dresses",
+  "womens-shoes",
+  "womens-bags",
+  "womens-jewellery",
+  "womens-watches",
+  "tops",
+]);
 const KIDS_CATEGORIES = new Set([
   "boys clothing",
   "girls clothing",
@@ -18,6 +28,49 @@ const KIDS_CATEGORIES = new Set([
 
 const getSizeById = (id) => SIZE_OPTIONS[id % SIZE_OPTIONS.length];
 const isInStock = (product) => (product?.rating?.count ?? 0) >= 120;
+const uniqueById = (items) => {
+  const seen = new Set();
+  return items.filter((item) => {
+    const id = Number(item?.id);
+    if (!id || seen.has(id)) {
+      return false;
+    }
+    seen.add(id);
+    return true;
+  });
+};
+
+const normalizeExternalProduct = (item) => {
+  if (!item || typeof item !== "object") {
+    return null;
+  }
+
+  const id = Number(item.id);
+  if (!id || Number.isNaN(id)) {
+    return null;
+  }
+
+  const image =
+    typeof item.image === "string" && item.image.trim()
+      ? item.image
+      : typeof item.thumbnail === "string" && item.thumbnail.trim()
+      ? item.thumbnail
+      : "/next.svg";
+
+  return {
+    id,
+    title: typeof item.title === "string" && item.title.trim() ? item.title : "Untitled product",
+    price: Number(item.price) || 0,
+    description:
+      typeof item.description === "string" && item.description.trim() ? item.description : "No description available.",
+    category: typeof item.category === "string" && item.category.trim() ? item.category : "uncategorized",
+    image,
+    rating: {
+      rate: Number(item?.rating) || Number(item?.rating?.rate) || 0,
+      count: Number(item?.stock) || Number(item?.rating?.count) || 0,
+    },
+  };
+};
 
 export default function ProductsSection() {
   const searchParams = useSearchParams();
@@ -29,6 +82,8 @@ export default function ProductsSection() {
   const [selectedSize, setSelectedSize] = useState("all");
   const [availability, setAvailability] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 9;
 
   const selectedAudience = useMemo(() => {
     const raw = (searchParams.get("audience") || "").toLowerCase();
@@ -38,10 +93,12 @@ export default function ProductsSection() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://fakestoreapi.com/products");
+        const response = await fetch("https://dummyjson.com/products?limit=0");
         const data = await response.json();
-        const apiProducts = Array.isArray(data) ? data : [];
-        setProducts([...apiProducts, ...kidsProducts]);
+        const apiProducts = Array.isArray(data?.products)
+          ? data.products.map(normalizeExternalProduct).filter(Boolean)
+          : [];
+        setProducts(uniqueById([...apiProducts, ...kidsProducts]));
       } catch (fetchError) {
         setError("Failed to load products");
         console.error(fetchError);
@@ -71,13 +128,42 @@ export default function ProductsSection() {
       const normalizedCategory = (product.category || "").toLowerCase();
       const audienceMatch =
         selectedAudience === "all" ||
-        (selectedAudience === "men" && normalizedCategory === "men's clothing") ||
-        (selectedAudience === "women" && normalizedCategory === "women's clothing") ||
+        (selectedAudience === "men" && MEN_CATEGORIES.has(normalizedCategory)) ||
+        (selectedAudience === "women" && WOMEN_CATEGORIES.has(normalizedCategory)) ||
         (selectedAudience === "kids" && KIDS_CATEGORIES.has(normalizedCategory));
 
       return titleMatch && sizeMatch && availabilityMatch && categoryMatch && audienceMatch;
     });
   }, [products, search, selectedSize, availability, selectedCategory, selectedAudience]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
+  const pagedProducts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+  const rangeStart = filteredProducts.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const rangeEnd = filteredProducts.length === 0 ? 0 : Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length);
+  const visiblePages = useMemo(() => {
+    const pages = [];
+    const start = Math.max(1, currentPage - 1);
+    const end = Math.min(totalPages, currentPage + 1);
+
+    for (let page = start; page <= end; page += 1) {
+      pages.push(page);
+    }
+
+    return pages;
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, selectedSize, availability, selectedCategory, selectedAudience]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   return (
     <div className="container-custom w-full bg-[var(--background)] py-4 text-[var(--foreground)] sm:py-6 md:py-10">
@@ -181,11 +267,59 @@ export default function ProductsSection() {
           )}
 
           {!loading && filteredProducts.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <CardProducts key={product.id} product={product} />
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {pagedProducts.map((product, index) => (
+                <CardProducts
+                  key={`${product.id}-${product.category}-${product.title}-${currentPage}-${index}`}
+                  product={product}
+                />
               ))}
-            </div>
+              </div>
+
+              {totalPages > 1 && (
+                <div className="mt-8 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                  <p className="text-lg font-medium text-[var(--foreground)]">
+                    {rangeStart}-{rangeEnd} of {filteredProducts.length} items
+                  </p>
+
+                  <div className="inline-flex overflow-hidden rounded-md border border-[#b9bdc4] bg-[#f0f1f3] text-[#1f2a3a]">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                      className="px-4 py-2 text-2xl border-r border-[#b9bdc4] disabled:opacity-45"
+                      aria-label="Previous page"
+                    >
+                      &#8249;
+                    </button>
+
+                    {visiblePages.map((page) => (
+                      <button
+                        key={page}
+                        type="button"
+                        onClick={() => setCurrentPage(page)}
+                        className={`min-w-11 px-4 py-2 text-3xl border-r border-[#b9bdc4] ${
+                          page === currentPage ? "bg-[#b6b8bd] text-white" : "bg-transparent"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                      className="px-4 py-2 text-2xl disabled:opacity-45"
+                      aria-label="Next page"
+                    >
+                      &#8250;
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </section>
       </div>

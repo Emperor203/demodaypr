@@ -7,7 +7,7 @@ import { getCartCount, getCartTotal, readCart, removeFromCart, updateCartQty } f
 import Header from "../Header/Header";
 
 export default function CartSection() {
-  const [items, setItems] = useState(() => readCart());
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     const sync = () => setItems(readCart());
