@@ -59,6 +59,7 @@ export default function Header() {
 
         <div className="hidden md:flex items-center gap-5 text-[11px] font-medium tracking-[0.1em] uppercase lg:gap-10 lg:text-[13px]">
           <Link href="/" className="hover:opacity-50 transition-opacity">Home</Link>
+          <Link href="/news" className="hover:opacity-50 transition-opacity">News</Link>
           <Link href="/cart"  className="hover:opacity-50 transition-opacity">Cart</Link>
         </div>
       </div>
@@ -114,6 +115,9 @@ export default function Header() {
           <div className="flex flex-col gap-3 text-sm font-medium uppercase tracking-[0.08em]">
             <Link href="/" className="hover:opacity-60" onClick={() => setIsMobileMenuOpen(false)}>
               Home
+            </Link>
+            <Link href="/news" className="hover:opacity-60" onClick={() => setIsMobileMenuOpen(false)}>
+              News
             </Link>
             <Link href="/cart" className="hover:opacity-60" onClick={() => setIsMobileMenuOpen(false)}>
               Cart
