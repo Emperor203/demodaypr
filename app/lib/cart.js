@@ -19,8 +19,10 @@ export function writeCart(items) {
     return;
   }
 
-  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-  window.dispatchEvent(new Event("cart:updated"));
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    window.dispatchEvent(new Event("cart:updated"));
+  } catch {}
 }
 
 export function addToCart(product) {

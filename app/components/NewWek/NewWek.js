@@ -2,12 +2,21 @@
 import React, { useEffect, useState } from "react";
 import CardProducts from "../CardProducts/CardProducts";
 import Link from "next/link";
-import kidsProducts from "../../Products";
+import ProductsCarousel from "../ProductsCarousel/ProductsCarousel";
 
 export default function NewWek() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const shuffleProducts = (items) => {
+    const copy = [...items];
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  };
 
   const normalizeProduct = (item) => ({
     id: Number(item?.id),
@@ -29,25 +38,43 @@ export default function NewWek() {
     const fetchClothing = async () => {
       try {
         setError("");
-        const [mensRes, womensRes] = await Promise.all([
-          fetch("/api/products/category/mens-shirts?limit=20"),
-          fetch("/api/products/category/womens-dresses?limit=20"),
-        ]);
-        const mensData = mensRes.ok ? await mensRes.json() : null;
-        const womensData = womensRes.ok ? await womensRes.json() : null;
-        const mens = Array.isArray(mensData?.products) ? mensData.products.map(normalizeProduct) : [];
-        const womens = Array.isArray(womensData?.products) ? womensData.products.map(normalizeProduct) : [];
-        const merged = [...mens, ...womens].filter((item) => item.id);
+        const sources = [
+          { label: "api", url: "/api/products?limit=12" },
+          { label: "dummyjson", url: "https://dummyjson.com/products?limit=12" },
+        ];
+        let data = null;
+        let lastError = "";
+        let lastSource = "";
+        let lastStatus = "";
+
+        for (const source of sources) {
+          const res = await fetch(source.url);
+          if (res.ok) {
+            data = await res.json();
+            lastSource = source.label;
+            lastStatus = String(res.status);
+            break;
+          }
+          lastError = `${source.label} responded ${res.status}`;
+        }
+
+        const items = Array.isArray(data?.products) ? data.products.map(normalizeProduct) : [];
+        const merged = items.filter((item) => item.id);
         if (merged.length === 0) {
-          setProducts(kidsProducts.slice(0, 7));
-          setError("Products are temporarily unavailable.");
+          setProducts([]);
+          const detail = lastError
+            ? lastError
+            : lastSource
+            ? `${lastSource} ok (${lastStatus}), products=${Array.isArray(data?.products) ? data.products.length : "n/a"}`
+            : "no data";
+          setError(`Products are temporarily unavailable (${detail}).`);
           return;
         }
-        setProducts(merged);
+        setProducts(shuffleProducts(merged));
       } catch (err) {
         console.error(err);
-        setProducts(kidsProducts.slice(0, 7));
-        setError("Products are temporarily unavailable.");
+        setProducts([]);
+        setError("Products are temporarily unavailable (network error).");
       } finally {
         setLoading(false);
       }
@@ -77,6 +104,8 @@ export default function NewWek() {
           <CardProducts key={item.id} product={item} />
         ))}
       </div>
+
+      <ProductsCarousel items={products.slice(4, 12)} title="Trending now" />
 
       <h1 className="mb-8 text-4xl font-black uppercase italic leading-[0.78] tracking-tighter sm:text-6xl md:mb-12 md:text-7xl">
         XIV <br /> Collections <br /> 23-24
