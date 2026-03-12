@@ -29,16 +29,10 @@ export default function NewWek() {
     const fetchClothing = async () => {
       try {
         setError("");
-        let [mensRes, womensRes] = await Promise.all([
+        const [mensRes, womensRes] = await Promise.all([
           fetch("/api/products/category/mens-shirts?limit=20"),
           fetch("/api/products/category/womens-dresses?limit=20"),
         ]);
-        if (!mensRes.ok || !womensRes.ok) {
-          [mensRes, womensRes] = await Promise.all([
-            fetch("https://dummyjson.com/products/category/mens-shirts?limit=20"),
-            fetch("https://dummyjson.com/products/category/womens-dresses?limit=20"),
-          ]);
-        }
         const mensData = mensRes.ok ? await mensRes.json() : null;
         const womensData = womensRes.ok ? await womensRes.json() : null;
         const mens = Array.isArray(mensData?.products) ? mensData.products.map(normalizeProduct) : [];
