@@ -1,40 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
-
-const newsItems = [
-  {
-    id: "drop-01",
-    title: "XIV Drop 23-24 lands this week",
-    date: "March 12, 2026",
-    tag: "Collection",
-    excerpt:
-      "A tight edit of statement knits, oversized outerwear, and hardware-forward accessories built for late season layering.",
-  },
-  {
-    id: "studio-02",
-    title: "Studio log: material lab update",
-    date: "March 4, 2026",
-    tag: "Studio",
-    excerpt:
-      "We tested new recycled blends and stress-washed finishes to keep structure without the heavy hand feel.",
-  },
-  {
-    id: "collab-03",
-    title: "City capsule pop-up schedule",
-    date: "February 28, 2026",
-    tag: "Events",
-    excerpt:
-      "Tashkent and Samarkand pop-ups with limited quantities, custom on-site fit adjustments, and early access pieces.",
-  },
-  {
-    id: "guides-04",
-    title: "Styling guide: winter to spring",
-    date: "February 18, 2026",
-    tag: "Guides",
-    excerpt:
-      "Three layering systems that keep the silhouette sharp while staying breathable through temperature shifts.",
-  },
-];
 
 const highlights = [
   {
@@ -57,7 +25,38 @@ const highlights = [
   },
 ];
 
+const normalizeNews = (item) => ({
+  id: String(item?.id ?? ""),
+  title: typeof item?.title === "string" ? item.title : "Untitled",
+  excerpt: typeof item?.body === "string" ? item.body : "",
+});
+
 export default function NewsPage() {
+  const [newsItems, setNewsItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setError("");
+        const res = await fetch("/api/news?limit=6");
+        const data = await res.json();
+        const items = Array.isArray(data?.posts) ? data.posts.map(normalizeNews) : [];
+        if (items.length === 0) {
+          setError("News is temporarily unavailable.");
+        }
+        setNewsItems(items);
+      } catch (err) {
+        console.error(err);
+        setError("News is temporarily unavailable.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
   return (
     <div className="min-h-screen w-full bg-[var(--background)] text-[var(--foreground)]">
       <div className="container-custom py-4 sm:py-6 md:py-8">
@@ -97,23 +96,30 @@ export default function NewsPage() {
                   2026
                 </span>
               </div>
-              <div className="mt-6 space-y-6">
-                {newsItems.map((item) => (
-                  <article
-                    key={item.id}
-                    className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-5 py-5 transition hover:translate-y-[-2px]"
-                  >
-                    <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)]">
-                      <span>{item.tag}</span>
-                      <span className="h-px w-10 bg-[var(--color-border)]" />
-                      <span>{item.date}</span>
-                    </div>
-                    <h2 className="mt-3 text-2xl font-black uppercase leading-tight">{item.title}</h2>
-                    <p className="mt-3 text-sm text-[var(--color-muted)]">{item.excerpt}</p>
-                    <div className="mt-4 text-xs uppercase tracking-[0.2em]">Read story</div>
-                  </article>
-                ))}
-              </div>
+
+              {loading ? (
+                <p className="mt-8 text-sm uppercase">Loading news...</p>
+              ) : error ? (
+                <p className="mt-8 text-sm text-red-500">{error}</p>
+              ) : (
+                <div className="mt-6 space-y-6">
+                  {newsItems.map((item) => (
+                    <article
+                      key={item.id}
+                      className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-5 py-5 transition hover:translate-y-[-2px]"
+                    >
+                      <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                        <span>Update</span>
+                        <span className="h-px w-10 bg-[var(--color-border)]" />
+                        <span>Post #{item.id}</span>
+                      </div>
+                      <h2 className="mt-3 text-2xl font-black uppercase leading-tight">{item.title}</h2>
+                      <p className="mt-3 text-sm text-[var(--color-muted)]">{item.excerpt}</p>
+                      <div className="mt-4 text-xs uppercase tracking-[0.2em]">Read story</div>
+                    </article>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </section>
