@@ -2,10 +2,12 @@
 import React, { useEffect, useState } from "react";
 import CardProducts from "../CardProducts/CardProducts";
 import Link from "next/link";
+import kidsProducts from "../../Products";
 
 export default function NewWek() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const normalizeProduct = (item) => ({
     id: Number(item?.id),
@@ -26,6 +28,7 @@ export default function NewWek() {
   useEffect(() => {
     const fetchClothing = async () => {
       try {
+        setError("");
         let [mensRes, womensRes] = await Promise.all([
           fetch("/api/products/category/mens-shirts?limit=20"),
           fetch("/api/products/category/womens-dresses?limit=20"),
@@ -36,13 +39,21 @@ export default function NewWek() {
             fetch("https://dummyjson.com/products/category/womens-dresses?limit=20"),
           ]);
         }
-        const mensData = await mensRes.json();
-        const womensData = await womensRes.json();
+        const mensData = mensRes.ok ? await mensRes.json() : null;
+        const womensData = womensRes.ok ? await womensRes.json() : null;
         const mens = Array.isArray(mensData?.products) ? mensData.products.map(normalizeProduct) : [];
         const womens = Array.isArray(womensData?.products) ? womensData.products.map(normalizeProduct) : [];
-        setProducts([...mens, ...womens].filter((item) => item.id));
+        const merged = [...mens, ...womens].filter((item) => item.id);
+        if (merged.length === 0) {
+          setProducts(kidsProducts.slice(0, 7));
+          setError("Products are temporarily unavailable.");
+          return;
+        }
+        setProducts(merged);
       } catch (err) {
         console.error(err);
+        setProducts(kidsProducts.slice(0, 7));
+        setError("Products are temporarily unavailable.");
       } finally {
         setLoading(false);
       }
@@ -64,6 +75,8 @@ export default function NewWek() {
           See All
         </Link>
       </div>
+
+      {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
 
       <div className="mb-14 grid grid-cols-1 gap-5 sm:grid-cols-2 md:mb-24 md:grid-cols-4 md:gap-6">
         {products.slice(0, 4).map((item) => (
