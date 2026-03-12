@@ -27,8 +27,8 @@ export default function NewWek() {
     const fetchClothing = async () => {
       try {
         const [mensRes, womensRes] = await Promise.all([
-          fetch("https://dummyjson.com/products/category/mens-shirts?limit=20"),
-          fetch("https://dummyjson.com/products/category/womens-dresses?limit=20"),
+          fetch("/api/products/category/mens-shirts?limit=20"),
+          fetch("/api/products/category/womens-dresses?limit=20"),
         ]);
         const mensData = await mensRes.json();
         const womensData = await womensRes.json();
