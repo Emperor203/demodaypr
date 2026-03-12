@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import CardProducts from "../CardProducts/CardProducts";
 import Link from "next/link";
 import ProductsCarousel from "../ProductsCarousel/ProductsCarousel";
+import kidsProducts from "../../Products";
 
 export default function NewWek() {
   const [products, setProducts] = useState([]);
@@ -37,6 +38,44 @@ export default function NewWek() {
   const isFashionCategory = (value) => {
     const category = String(value || "").toLowerCase();
     if (!category) return false;
+    const excluded = [
+      "fragrance",
+      "beauty",
+      "skincare",
+      "cosmetics",
+      "makeup",
+      "perfume",
+      "kitchen",
+      "home",
+      "furniture",
+      "groceries",
+      "electronics",
+      "lighting",
+      "automotive",
+      "sports",
+    ];
+    if (excluded.some((word) => category.includes(word))) {
+      return false;
+    }
+    const allowed = new Set([
+      "mens-shirts",
+      "mens-shoes",
+      "mens-watches",
+      "womens-dresses",
+      "womens-shoes",
+      "womens-bags",
+      "womens-jewellery",
+      "womens-watches",
+      "tops",
+      "boys clothing",
+      "girls clothing",
+      "toddler clothing",
+      "baby clothing",
+      "unisex kids clothing",
+    ]);
+    if (allowed.has(category)) {
+      return true;
+    }
     const keywords = [
       "shirt",
       "t-shirt",
@@ -69,11 +108,6 @@ export default function NewWek() {
       "sunglasses",
       "jewelry",
       "jewelery",
-      "accessories",
-      "fragrance",
-      "beauty",
-      "skincare",
-      "cosmetics",
     ];
     return keywords.some((word) => category.includes(word));
   };
@@ -83,8 +117,8 @@ export default function NewWek() {
       try {
         setError("");
         const sources = [
-          { label: "api", url: "/api/products?limit=12" },
-          { label: "dummyjson", url: "https://dummyjson.com/products?limit=12" },
+          { label: "api", url: "/api/products?limit=0" },
+          { label: "dummyjson", url: "https://dummyjson.com/products?limit=0" },
         ];
         let data = null;
         let lastError = "";
@@ -103,7 +137,8 @@ export default function NewWek() {
         }
 
         const items = Array.isArray(data?.products) ? data.products.map(normalizeProduct) : [];
-        const merged = items.filter((item) => item.id && isFashionCategory(item.category));
+        const filtered = items.filter((item) => item.id && isFashionCategory(item.category));
+        const merged = [...filtered, ...kidsProducts].filter((item) => item && item.id);
         if (merged.length === 0) {
           setProducts([]);
           const detail = lastError
@@ -117,8 +152,8 @@ export default function NewWek() {
         setProducts(shuffleProducts(merged));
       } catch (err) {
         console.error(err);
-        setProducts([]);
-        setError("Товары временно недоступны (ошибка сети).");
+        setProducts(shuffleProducts([...kidsProducts]));
+        setError("");
       } finally {
         setLoading(false);
       }
