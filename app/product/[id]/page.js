@@ -67,7 +67,10 @@ export default function ProductDetailsPage() {
       }
 
       try {
-        const response = await fetch(`/api/products/${numericId}`);
+        let response = await fetch(`/api/products/${numericId}`);
+        if (!response.ok) {
+          response = await fetch(`https://dummyjson.com/products/${numericId}`);
+        }
         if (response.ok) {
           const direct = normalizeProduct(await response.json());
           if (direct && active) {
@@ -79,7 +82,10 @@ export default function ProductDetailsPage() {
       } catch {}
 
       try {
-        const listResponse = await fetch("/api/products?limit=0");
+        let listResponse = await fetch("/api/products?limit=0");
+        if (!listResponse.ok) {
+          listResponse = await fetch("https://dummyjson.com/products?limit=0");
+        }
         if (listResponse.ok) {
           const payload = await listResponse.json();
           const products = Array.isArray(payload?.products) ? payload.products : [];

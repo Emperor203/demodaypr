@@ -26,10 +26,16 @@ export default function NewWek() {
   useEffect(() => {
     const fetchClothing = async () => {
       try {
-        const [mensRes, womensRes] = await Promise.all([
+        let [mensRes, womensRes] = await Promise.all([
           fetch("/api/products/category/mens-shirts?limit=20"),
           fetch("/api/products/category/womens-dresses?limit=20"),
         ]);
+        if (!mensRes.ok || !womensRes.ok) {
+          [mensRes, womensRes] = await Promise.all([
+            fetch("https://dummyjson.com/products/category/mens-shirts?limit=20"),
+            fetch("https://dummyjson.com/products/category/womens-dresses?limit=20"),
+          ]);
+        }
         const mensData = await mensRes.json();
         const womensData = await womensRes.json();
         const mens = Array.isArray(mensData?.products) ? mensData.products.map(normalizeProduct) : [];

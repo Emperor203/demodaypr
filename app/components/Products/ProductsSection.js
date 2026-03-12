@@ -93,7 +93,10 @@ export default function ProductsSection() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products?limit=0");
+        let response = await fetch("/api/products?limit=0");
+        if (!response.ok) {
+          response = await fetch("https://dummyjson.com/products?limit=0");
+        }
         const data = await response.json();
         const apiProducts = Array.isArray(data?.products)
           ? data.products.map(normalizeExternalProduct).filter(Boolean)
