@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request, { params }) {
   const slug = typeof params?.slug === "string" ? params.slug.trim() : "";
   if (!slug) {
-    return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+    return NextResponse.json({ error: "Некорректная категория" }, { status: 400 });
   }
 
   const { searchParams } = new URL(request.url);
@@ -23,11 +23,11 @@ export async function GET(request, { params }) {
   try {
     const response = await fetch(target, { cache: "no-store" });
     if (!response.ok) {
-      return NextResponse.json({ error: "Upstream error" }, { status: response.status });
+      return NextResponse.json({ error: "Ошибка внешнего сервиса" }, { status: response.status });
     }
     const data = await response.json();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch category" }, { status: 502 });
+    return NextResponse.json({ error: "Не удалось получить категорию" }, { status: 502 });
   }
 }

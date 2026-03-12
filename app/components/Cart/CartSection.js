@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getCartCount, getCartTotal, readCart, removeFromCart, updateCartQty } from "../../lib/cart";
 import Header from "../Header/Header";
+import { formatCategory } from "../../lib/labels";
 
 export default function CartSection() {
   const [items, setItems] = useState([]);
@@ -47,17 +48,17 @@ export default function CartSection() {
 
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <section className="lg:col-span-8">
-          <h1 className="text-3xl font-black uppercase mb-2">Shopping Bag</h1>
-          <p className="text-sm text-[var(--color-muted)] mb-6">Items: {count}</p>
+          <h1 className="text-3xl font-black uppercase mb-2">Корзина</h1>
+          <p className="text-sm text-[var(--color-muted)] mb-6">Товаров: {count}</p>
 
           {items.length === 0 ? (
             <div className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-sm">
-              <p>Cart is empty.</p>
+              <p>Корзина пуста.</p>
               <Link
                 href="/products"
                 className="mt-4 inline-flex items-center gap-2 border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-4 py-2 text-xs font-bold uppercase tracking-wider hover:opacity-90"
               >
-                Go to shop
+                Перейти в магазин
                 <span aria-hidden="true">-&gt;</span>
               </Link>
             </div>
@@ -71,7 +72,7 @@ export default function CartSection() {
                     </Link>
 
                     <div>
-                      <p className="text-[10px] uppercase text-[var(--color-muted)] sm:text-[11px]">{item.category}</p>
+                      <p className="text-[10px] uppercase text-[var(--color-muted)] sm:text-[11px]">{formatCategory(item.category)}</p>
                       <Link href={`/product/${item.id}`} className="font-bold hover:underline">
                         {item.title}
                       </Link>
@@ -84,7 +85,7 @@ export default function CartSection() {
                         onClick={() => handleRemove(item.id)}
                         className="text-xs underline text-[var(--color-muted)]"
                       >
-                        Remove
+                        Удалить
                       </button>
                       <div className="flex items-center gap-2">
                         <button
@@ -113,18 +114,18 @@ export default function CartSection() {
 
         <aside className="lg:col-span-4">
           <div className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-            <h2 className="text-xl font-bold uppercase mb-4">Order Summary</h2>
+            <h2 className="text-xl font-bold uppercase mb-4">Итого</h2>
             <div className="flex justify-between text-sm mb-2">
-              <span>Subtotal</span>
+              <span>Подытог</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm mb-4">
-              <span>Shipping</span>
+              <span>Доставка</span>
               <span>${items.length > 0 ? "10.00" : "0.00"}</span>
             </div>
             <div className="h-px bg-[var(--color-border)] mb-4" />
             <div className="flex justify-between font-bold">
-              <span>Total</span>
+              <span>Итого к оплате</span>
               <span>${(subtotal + (items.length > 0 ? 10 : 0)).toFixed(2)}</span>
             </div>
           </div>

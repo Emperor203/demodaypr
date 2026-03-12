@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function ProductsCarousel({ items, title = "Featured" }) {
+export default function ProductsCarousel({ items, title = "Рекомендуем" }) {
   const trackRef = useRef(null);
 
   const scrollByAmount = (direction) => {
@@ -29,7 +29,7 @@ export default function ProductsCarousel({ items, title = "Featured" }) {
             type="button"
             onClick={() => scrollByAmount(-1)}
             className="h-9 w-9 border border-[var(--color-border)] bg-[var(--color-surface)] text-lg"
-            aria-label="Scroll left"
+            aria-label="Прокрутить влево"
           >
             &#8249;
           </button>
@@ -37,7 +37,7 @@ export default function ProductsCarousel({ items, title = "Featured" }) {
             type="button"
             onClick={() => scrollByAmount(1)}
             className="h-9 w-9 border border-[var(--color-border)] bg-[var(--color-surface)] text-lg"
-            aria-label="Scroll right"
+            aria-label="Прокрутить вправо"
           >
             &#8250;
           </button>

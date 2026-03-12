@@ -7,6 +7,7 @@ import Link from "next/link";
 import Header from "../../components/Header/Header";
 import kidsProducts from "../../Products";
 import { addToCart } from "../../lib/cart";
+import { formatCategory } from "../../lib/labels";
 
 function normalizeProduct(raw) {
   if (!raw || typeof raw !== "object") {
@@ -20,13 +21,13 @@ function normalizeProduct(raw) {
 
   return {
     id,
-    title: typeof raw.title === "string" && raw.title.trim() ? raw.title : "Untitled product",
+    title: typeof raw.title === "string" && raw.title.trim() ? raw.title : "Без названия",
     price: Number(raw.price) || 0,
     description:
       typeof raw.description === "string" && raw.description.trim()
         ? raw.description
-        : "No description available.",
-    category: typeof raw.category === "string" && raw.category.trim() ? raw.category : "uncategorized",
+        : "Описание отсутствует.",
+    category: typeof raw.category === "string" && raw.category.trim() ? raw.category : "без категории",
     image:
       (typeof raw.image === "string" && raw.image.trim()) ||
       (typeof raw.thumbnail === "string" && raw.thumbnail.trim()) ||
@@ -129,19 +130,19 @@ export default function ProductDetailsPage() {
       <div className="mb-6">
         <p className="text-sm text-[var(--color-muted)]">
           <Link href="/" className="hover:underline">
-            Home
+            Главная
           </Link>{" "}
           /{" "}
           <Link href="/products" className="hover:underline">
-            Products
+            Товары
           </Link>{" "}
-          / Product
+          / Товар
         </p>
       </div>
 
       {loading ? (
         <div className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-          <p className="text-sm uppercase">Loading product...</p>
+          <p className="text-sm uppercase">Загрузка товара...</p>
         </div>
       ) : product ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -157,12 +158,12 @@ export default function ProductDetailsPage() {
           </div>
 
           <div className="space-y-5">
-            <p className="text-xs uppercase tracking-wide text-[var(--color-muted)]">{product.category}</p>
+            <p className="text-xs uppercase tracking-wide text-[var(--color-muted)]">{formatCategory(product.category)}</p>
             <h1 className="text-3xl md:text-4xl font-black leading-tight">{product.title}</h1>
             <p className="text-2xl font-bold">${product.price}</p>
 
             <div className="text-sm text-[var(--color-muted)]">
-              Rating: {product.rating?.rate ?? "-"} ({product.rating?.count ?? 0} reviews)
+              Рейтинг: {product.rating?.rate ?? "-"} ({product.rating?.count ?? 0} отзывов)
             </div>
 
             <p className="text-base leading-7 max-w-[700px]">{product.description}</p>
@@ -173,29 +174,29 @@ export default function ProductDetailsPage() {
                 onClick={handleAddToCart}
                 className="px-5 py-3 border border-[var(--color-border)] bg-[var(--color-surface-soft)] hover:opacity-90"
               >
-                {added ? "Added" : "Add to cart"}
+                {added ? "Добавлено" : "В корзину"}
               </button>
               <Link
                 href="/products"
                 className="px-5 py-3 border border-[var(--color-border)] bg-[var(--color-surface)] hover:opacity-90"
               >
-                Back to products
+                Назад к товарам
               </Link>
             </div>
           </div>
         </div>
       ) : (
         <div className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-          <h1 className="text-2xl font-black uppercase">Product unavailable</h1>
+          <h1 className="text-2xl font-black uppercase">Товар недоступен</h1>
           <p className="mt-2 text-sm text-[var(--color-muted)]">
-            Could not load this product right now. Please try again or open products list.
+            Не удалось загрузить товар. Попробуйте позже или откройте список товаров.
           </p>
           <div className="mt-5">
             <Link
               href="/products"
               className="px-5 py-3 border border-[var(--color-border)] bg-[var(--color-surface)] hover:opacity-90"
             >
-              Open products
+              Открыть товары
             </Link>
           </div>
         </div>

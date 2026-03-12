@@ -16,17 +16,17 @@ export default function Home() {
               <ul className="space-y-2 font-bold">
                 <li>
                   <Link href="/products?audience=men" className="text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">
-                    MEN
+                    МУЖЧИНАМ
                   </Link>
                 </li>
                 <li>
                   <Link href="/products?audience=women" className="text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">
-                    WOMEN
+                    ЖЕНЩИНАМ
                   </Link>
                 </li>
                 <li>
                   <Link href="/products?audience=kids" className="text-3xl transition hover:opacity-60 sm:text-4xl lg:text-5xl">
-                    KIDS
+                    ДЕТЯМ
                   </Link>
                 </li>
               </ul>
@@ -35,25 +35,25 @@ export default function Home() {
                 <div className="absolute inset-y-0 left-3 flex items-center">&#128269;</div>
                 <input
                   type="text"
-                  placeholder="Search"
+                  placeholder="Поиск"
                   className="w-full py-3 pl-10 pr-4 text-sm outline-none focus:ring-1 border border-[var(--color-border)] bg-[var(--color-surface)]"
                 />
               </div>
 
               <div className="pt-4">
                 <h1 className="max-w-[360px] text-[44px] font-black uppercase italic leading-[0.8] tracking-tighter opacity-90 sm:max-w-[430px] sm:text-[56px] lg:max-w-[500px] lg:text-[64px] xl:text-[72px]">
-                  NEW <br /> COLLECTION
+                  НОВАЯ <br /> КОЛЛЕКЦИЯ
                 </h1>
 
                 <div className="mt-6 text-[14px] font-medium text-[var(--color-muted)]">
-                  Summer <br /> 2024
+                  Лето <br /> 2024
                 </div>
               </div>
             </div>
 
             <Link href="/products">
               <button className="flex w-full max-w-[240px] items-center justify-between rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-6 py-4 transition hover:opacity-90 sm:py-5">
-                <span className="text-[11px] font-bold uppercase tracking-widest">Go To Shop</span>
+                <span className="text-[11px] font-bold uppercase tracking-widest">Перейти в магазин</span>
                 &#8594;
               </button>
             </Link>
@@ -61,11 +61,11 @@ export default function Home() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-8 lg:gap-8 lg:pt-24 xl:pt-40">
             <div className="relative flex h-[320px] items-center justify-center overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface)] sm:h-[360px] lg:h-[376px]">
-              <Image src="/model1.png" alt="Collection 1" fill className="object-contain p-3" priority />
+              <Image src="/model1.png" alt="Коллекция 1" fill className="object-contain p-3" priority />
             </div>
 
             <div className="relative flex h-[320px] items-center justify-center overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface)] sm:h-[360px] lg:h-[376px]">
-              <Image src="/model2.png" alt="Collection 2" fill className="object-contain p-3" />
+              <Image src="/model2.png" alt="Коллекция 2" fill className="object-contain p-3" />
             </div>
           </div>
         </main>

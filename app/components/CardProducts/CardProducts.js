@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { addToCart } from "../../lib/cart";
+import { formatCategory } from "../../lib/labels";
 
 export default function CardProducts({ product }) {
   const [added, setAdded] = useState(false);
@@ -35,12 +36,12 @@ export default function CardProducts({ product }) {
         onClick={handleAddToCart}
         className="h-10 px-3 rounded border border-[var(--color-border)] bg-[var(--color-surface-soft)] text-[11px] font-bold uppercase tracking-wide hover:opacity-90 self-end -mt-14 mr-3 z-10"
       >
-        {added ? "Added" : "Add"}
+        {added ? "Добавлено" : "Добавить"}
       </button>
 
       <div className="space-y-1">
         <div className="text-[10px] text-[var(--color-muted)] uppercase tracking-tight">
-          {product.category}
+          {formatCategory(product.category)}
         </div>
         <div className="flex justify-between items-center">
           <Link href={`/product/${product.id}`} className="mr-2 min-w-0">

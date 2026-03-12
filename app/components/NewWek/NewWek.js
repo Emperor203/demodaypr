@@ -20,10 +20,10 @@ export default function NewWek() {
 
   const normalizeProduct = (item) => ({
     id: Number(item?.id),
-    title: typeof item?.title === "string" && item.title.trim() ? item.title : "Untitled product",
+    title: typeof item?.title === "string" && item.title.trim() ? item.title : "Без названия",
     price: Number(item?.price) || 0,
     description: typeof item?.description === "string" ? item.description : "",
-    category: typeof item?.category === "string" ? item.category : "uncategorized",
+    category: typeof item?.category === "string" ? item.category : "без категории",
     image:
       (typeof item?.thumbnail === "string" && item.thumbnail.trim()) ||
       (typeof item?.image === "string" && item.image.trim()) ||
@@ -33,6 +33,50 @@ export default function NewWek() {
       count: Number(item?.stock) || 0,
     },
   });
+
+  const isFashionCategory = (value) => {
+    const category = String(value || "").toLowerCase();
+    if (!category) return false;
+    const keywords = [
+      "shirt",
+      "t-shirt",
+      "tshirt",
+      "top",
+      "dress",
+      "skirt",
+      "jeans",
+      "pants",
+      "shorts",
+      "jacket",
+      "coat",
+      "hoodie",
+      "sweater",
+      "mens",
+      "women",
+      "kids",
+      "clothing",
+      "apparel",
+      "shoes",
+      "sneakers",
+      "boots",
+      "heels",
+      "sandals",
+      "slippers",
+      "bags",
+      "handbags",
+      "watch",
+      "watches",
+      "sunglasses",
+      "jewelry",
+      "jewelery",
+      "accessories",
+      "fragrance",
+      "beauty",
+      "skincare",
+      "cosmetics",
+    ];
+    return keywords.some((word) => category.includes(word));
+  };
 
   useEffect(() => {
     const fetchClothing = async () => {
@@ -55,26 +99,26 @@ export default function NewWek() {
             lastStatus = String(res.status);
             break;
           }
-          lastError = `${source.label} responded ${res.status}`;
+          lastError = `${source.label}: ответ ${res.status}`;
         }
 
         const items = Array.isArray(data?.products) ? data.products.map(normalizeProduct) : [];
-        const merged = items.filter((item) => item.id);
+        const merged = items.filter((item) => item.id && isFashionCategory(item.category));
         if (merged.length === 0) {
           setProducts([]);
           const detail = lastError
             ? lastError
             : lastSource
-            ? `${lastSource} ok (${lastStatus}), products=${Array.isArray(data?.products) ? data.products.length : "n/a"}`
-            : "no data";
-          setError(`Products are temporarily unavailable (${detail}).`);
+            ? `${lastSource}: ок (${lastStatus}), товаров=${Array.isArray(data?.products) ? data.products.length : "н/д"}`
+            : "нет данных";
+          setError(`Товары временно недоступны (${detail}).`);
           return;
         }
         setProducts(shuffleProducts(merged));
       } catch (err) {
         console.error(err);
         setProducts([]);
-        setError("Products are temporarily unavailable (network error).");
+        setError("Товары временно недоступны (ошибка сети).");
       } finally {
         setLoading(false);
       }
@@ -83,17 +127,17 @@ export default function NewWek() {
   }, []);
 
   if (loading) {
-    return <div className="p-10 text-center uppercase">Loading...</div>;
+    return <div className="p-10 text-center uppercase">Загрузка...</div>;
   }
 
   return (
     <div className="mt-10 w-full p-4 sm:p-6 md:mt-14 md:p-10">
       <div className="mb-8 flex items-end justify-between md:mb-10">
         <h1 className="text-3xl font-black uppercase leading-none tracking-tighter sm:text-4xl">
-          New <br /> This Week
+          Новинки <br /> этой недели
         </h1>
         <Link href="/products" className="cursor-pointer text-xs font-bold uppercase text-[var(--foreground)] underline sm:text-sm">
-          See All
+          Смотреть все
         </Link>
       </div>
 
@@ -105,10 +149,10 @@ export default function NewWek() {
         ))}
       </div>
 
-      <ProductsCarousel items={products.slice(4, 12)} title="Trending now" />
+      <ProductsCarousel items={products.slice(4, 12)} title="В тренде" />
 
       <h1 className="mb-8 text-4xl font-black uppercase italic leading-[0.78] tracking-tighter sm:text-6xl md:mb-12 md:text-7xl">
-        XIV <br /> Collections <br /> 23-24
+        Коллекция XIV <br /> 23-24
       </h1>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-8">

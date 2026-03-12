@@ -7,54 +7,64 @@ import Footer from "../components/Footer/Footer";
 const highlights = [
   {
     id: "hl-1",
-    label: "Lookbook",
-    title: "Focus on form",
-    copy: "Structured silhouettes with soft drape. Clean lines, heavy texture.",
+    label: "Лукбук",
+    title: "Фокус на силуэт",
+    copy: "Структурные силуэты с мягкой драпировкой. Чистые линии, плотная фактура.",
   },
   {
     id: "hl-2",
-    label: "Craft",
-    title: "Materials first",
-    copy: "Recycled blends, water-based dye, low-impact finishing.",
+    label: "Мастерство",
+    title: "Материалы важнее всего",
+    copy: "Переработанные смеси, водные красители, бережная отделка.",
   },
   {
     id: "hl-3",
-    label: "Community",
-    title: "Built with local studios",
-    copy: "Small-batch collaborations across Tashkent ateliers.",
+    label: "Сообщество",
+    title: "Создано с локальными студиями",
+    copy: "Малые партии в коллаборации с ташкентскими ателье.",
   },
 ];
 
-const normalizeNews = (item) => ({
-  id: String(item?.id ?? ""),
-  title: typeof item?.title === "string" ? item.title : "Untitled",
-  excerpt: typeof item?.body === "string" ? item.body : "",
-});
+const LOCAL_NEWS = [
+  {
+    id: "local-1",
+    title: "Мы обновили ассортимент недели",
+    excerpt: "Добавили новые позиции в одежде и обуви, а также свежие аксессуары. Проверьте раздел «Новинки».",
+  },
+  {
+    id: "local-2",
+    title: "Быстрая доставка по городу",
+    excerpt: "Теперь доставляем заказы по городу в течение 24 часов. Подробности — в корзине при оформлении.",
+  },
+  {
+    id: "local-3",
+    title: "Скидки на избранные категории",
+    excerpt: "До конца недели действует акция на куртки, худи и спортивные комплекты.",
+  },
+  {
+    id: "local-4",
+    title: "Новые размеры в наличии",
+    excerpt: "Пополнены размеры XS и XL на самые популярные модели. Успейте забронировать.",
+  },
+  {
+    id: "local-5",
+    title: "Коллекция XIV 23–24 уже в продаже",
+    excerpt: "Лимитированные вещи с акцентом на посадку и материалы уже доступны в каталоге.",
+  },
+  {
+    id: "local-6",
+    title: "Советы по уходу за тканями",
+    excerpt: "Мы собрали простые рекомендации, чтобы ваши вещи дольше сохраняли форму и цвет.",
+  },
+];
 
 export default function NewsPage() {
   const [newsItems, setNewsItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        setError("");
-        const res = await fetch("/api/news?limit=6");
-        const data = await res.json();
-        const items = Array.isArray(data?.posts) ? data.posts.map(normalizeNews) : [];
-        if (items.length === 0) {
-          setError("News is temporarily unavailable.");
-        }
-        setNewsItems(items);
-      } catch (err) {
-        console.error(err);
-        setError("News is temporarily unavailable.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+    setNewsItems(LOCAL_NEWS);
+    setLoading(false);
   }, []);
 
   return (
@@ -64,14 +74,14 @@ export default function NewsPage() {
 
         <section className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-5">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">Newsroom</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">Новости</p>
             <h1 className="mt-4 text-[42px] font-black uppercase leading-[0.85] tracking-tighter sm:text-[52px] md:text-[64px]">
-              Latest updates
+              Свежие обновления
               <br />
-              from XIV
+              от XIV
             </h1>
             <p className="mt-6 max-w-[420px] text-sm text-[var(--color-muted)]">
-              Drops, studio notes, and community events. Fresh updates every week with a focus on materials and fit.
+              Дропы, заметки студии и события сообщества. Еженедельные обновления с акцентом на материалы и посадку.
             </p>
 
             <div className="mt-8 space-y-4">
@@ -80,9 +90,9 @@ export default function NewsPage() {
                   key={item.id}
                   className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-4"
                 >
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--color-muted)]">{item.label}</p>
-                  <h3 className="mt-2 text-lg font-bold uppercase tracking-tight">{item.title}</h3>
-                  <p className="mt-2 text-sm text-[var(--color-muted)]">{item.copy}</p>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--color-muted)]">{item.label}</p>
+                <h3 className="mt-2 text-lg font-bold uppercase tracking-tight">{item.title}</h3>
+                <p className="mt-2 text-sm text-[var(--color-muted)]">{item.copy}</p>
                 </div>
               ))}
             </div>
@@ -91,16 +101,14 @@ export default function NewsPage() {
           <div className="lg:col-span-7">
             <div className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8">
               <div className="flex items-center justify-between">
-                <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">This season</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">Этот сезон</p>
                 <span className="rounded-full border border-[var(--color-border)] px-3 py-1 text-[11px] uppercase tracking-[0.2em]">
                   2026
                 </span>
               </div>
 
               {loading ? (
-                <p className="mt-8 text-sm uppercase">Loading news...</p>
-              ) : error ? (
-                <p className="mt-8 text-sm text-red-500">{error}</p>
+                <p className="mt-8 text-sm uppercase">Загрузка новостей...</p>
               ) : (
                 <div className="mt-6 space-y-6">
                   {newsItems.map((item) => (
@@ -109,13 +117,13 @@ export default function NewsPage() {
                       className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-5 py-5 transition hover:translate-y-[-2px]"
                     >
                       <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)]">
-                        <span>Update</span>
+                        <span>Обновление</span>
                         <span className="h-px w-10 bg-[var(--color-border)]" />
-                        <span>Post #{item.id}</span>
+                        <span>Пост №{item.id}</span>
                       </div>
                       <h2 className="mt-3 text-2xl font-black uppercase leading-tight">{item.title}</h2>
                       <p className="mt-3 text-sm text-[var(--color-muted)]">{item.excerpt}</p>
-                      <div className="mt-4 text-xs uppercase tracking-[0.2em]">Read story</div>
+                      <div className="mt-4 text-xs uppercase tracking-[0.2em]">Читать</div>
                     </article>
                   ))}
                 </div>

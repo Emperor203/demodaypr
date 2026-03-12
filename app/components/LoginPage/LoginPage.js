@@ -43,14 +43,14 @@ export default function LoginPage() {
         ...(provider === "google" ? { prompt: "select_account" } : {}),
       });
     } catch {
-      setFormMessage("Sign in failed. Please try again.");
+      setFormMessage("Вход не выполнен. Попробуйте еще раз.");
       setLoading(false);
     }
   };
 
   const handleEmailSubmit = (event) => {
     event.preventDefault();
-    setFormMessage("Email/password login is not configured yet. Use GitHub or Google sign in.");
+    setFormMessage("Вход по email/паролю пока не настроен. Используйте вход через GitHub или Google.");
   };
 
   return (
@@ -64,31 +64,31 @@ export default function LoginPage() {
                 type="button"
                 onClick={toggleTheme}
                 className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 text-xs font-semibold text-[var(--foreground)]"
-                aria-label="Switch color theme"
+                aria-label="Переключить тему"
               >
                 {isDark ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
               </button>
             </div>
 
             <h1 className={`${headingFont.className} mt-10 text-[42px] leading-[0.95] sm:mt-16 sm:text-[64px]`}>
-              Welcome back
+              С возвращением
             </h1>
             <p className="mt-3 text-[15px] text-[var(--color-muted)]">
-              The faster you fill up, the faster you get a ticket
+              Чем быстрее вы заполните данные, тем быстрее получите доступ
             </p>
 
             <form className="mt-10 space-y-5" onSubmit={handleEmailSubmit}>
               <label className="block">
-                <span className={`${headingFont.className} mb-2 block text-[28px] leading-none sm:text-[34px]`}>Email</span>
+                <span className={`${headingFont.className} mb-2 block text-[28px] leading-none sm:text-[34px]`}>Эл. почта</span>
                 <input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Введите email"
                   className="h-12 w-full border border-[var(--color-border)] bg-transparent px-4 text-[15px] outline-none transition focus:border-[var(--foreground)]"
                 />
               </label>
 
               <label className="block">
-                <span className={`${headingFont.className} mb-2 block text-[28px] leading-none sm:text-[34px]`}>Password</span>
+                <span className={`${headingFont.className} mb-2 block text-[28px] leading-none sm:text-[34px]`}>Пароль</span>
                 <input
                   type="password"
                   placeholder="********"
@@ -104,10 +104,10 @@ export default function LoginPage() {
                     onChange={(event) => setRememberMe(event.target.checked)}
                     className="h-4 w-4 border border-[var(--color-border)]"
                   />
-                  Remember me
+                  Запомнить меня
                 </label>
                 <button type="button" className="text-[var(--foreground)] hover:underline">
-                  Forgot Password
+                  Забыли пароль
                 </button>
               </div>
 
@@ -115,7 +115,7 @@ export default function LoginPage() {
                 type="submit"
                 className="mt-3 h-12 w-full bg-[var(--color-accent)] text-xl text-[var(--color-on-accent)] transition hover:opacity-90 sm:text-[25px]"
               >
-                Sign In
+                Войти
               </button>
 
               <button
@@ -130,7 +130,7 @@ export default function LoginPage() {
                   <Image src="/googlelogo.svg" alt="Google" width={20} height={20} className="h-5 w-5" />
                 )}
                 <span className={`${headingFont.className} text-xl leading-none sm:text-[34px]`}>
-                  {isGoogleLoading ? "Redirecting..." : "Sign In with Google"}
+                  {isGoogleLoading ? "Перенаправляем..." : "Войти через Google"}
                 </span>
               </button>
 
@@ -146,34 +146,34 @@ export default function LoginPage() {
                   <Image src="/githublogo.svg" alt="GitHub" width={20} height={20} className="h-5 w-5" />
                 )}
                 <span className={`${headingFont.className} text-xl leading-none sm:text-[34px]`}>
-                  {isGithubLoading ? "Redirecting..." : "Sign In with GitHub"}
+                  {isGithubLoading ? "Перенаправляем..." : "Войти через GitHub"}
                 </span>
               </button>
 
               {formMessage ? <p className="text-sm text-[#ef4444]">{formMessage}</p> : null}
               {rememberMe ? (
                 <p className="text-xs text-[var(--color-muted)]">
-                  Your sign-in session stays active and login page will auto-redirect you next time.
+                  Сессия входа останется активной, и в следующий раз страница входа автоматически перенаправит вас.
                 </p>
               ) : null}
             </form>
 
             <p className="mt-12 text-center text-[15px] text-[var(--color-muted)] sm:mt-16">
-              Don&apos;t have an account?{" "}
+              Нет аккаунта?{" "}
               <Link href="#" className="font-semibold text-[var(--foreground)] hover:underline">
-                Sign up
+                Зарегистрироваться
               </Link>
             </p>
           </div>
         </section>
 
         <section className="relative hidden min-h-screen lg:block">
-          <Image src="/loginmodule.svg" alt="Login visual" fill priority className="object-cover" />
+          <Image src="/loginmodule.svg" alt="Визуальный блок входа" fill priority className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-black/15" />
           <div className="absolute inset-0 flex items-end p-10 text-white">
             <div>
-              <p className={`${headingFont.className} text-[56px] leading-none`}>Your Visual</p>
-              <p className="mt-3 max-w-[420px] text-sm text-white/85">Replace image at /public/login-visual.jpg</p>
+              <p className={`${headingFont.className} text-[56px] leading-none`}>Ваш визуал</p>
+              <p className="mt-3 max-w-[420px] text-sm text-white/85">Замените изображение в /public/login-visual.jpg</p>
             </div>
           </div>
         </section>
