@@ -2,13 +2,17 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
+const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
+
 function requireEnv(name) {
   const value = process.env[name];
   if (!value) {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === "production" && !isBuildPhase) {
       throw new Error(`Missing required environment variable: ${name}`);
     }
-    console.warn(`[auth] Missing env ${name}; provider will be disabled in dev.`);
+    console.warn(
+      `[auth] Missing env ${name}; provider will be disabled${isBuildPhase ? " during build" : " in dev"}.`
+    );
     return null;
   }
   return value;
