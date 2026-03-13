@@ -1,19 +1,8 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/Theme/ThemeProvider";
 import ThemeToggle from "./components/Theme/ThemeToggle";
 import AuthProvider from "./components/Auth/AuthProvider";
 import { auth } from "@/auth";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: "Интернет-магазин",
@@ -25,7 +14,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="ru" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className="antialiased">
         <AuthProvider session={session}>
           <ThemeProvider>
             <ThemeToggle />

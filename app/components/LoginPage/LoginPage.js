@@ -1,6 +1,5 @@
 "use client";
 
-import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { Moon, Sun } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,15 +7,6 @@ import { signIn } from "next-auth/react";
 import { useState, useSyncExternalStore } from "react";
 import { useTheme } from "../Theme/ThemeProvider";
 
-const headingFont = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const bodyFont = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 export default function LoginPage() {
   const { theme, toggleTheme } = useTheme();
@@ -54,12 +44,12 @@ export default function LoginPage() {
   };
 
   return (
-    <main className={`${bodyFont.className} min-h-screen bg-[var(--background)] text-[var(--foreground)]`}>
+    <main className="font-body min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <div className="mx-auto grid min-h-screen max-w-[1440px] grid-cols-1 lg:grid-cols-2">
         <section className="flex items-center justify-center px-6 py-10 sm:px-10 lg:px-16">
           <div className="w-full max-w-[420px]">
             <div className="flex items-center justify-between gap-4">
-              <p className={`${headingFont.className} text-[20px] tracking-wide`}>Gizhar.</p>
+              <p className="font-heading text-[20px] tracking-wide">Gizhar.</p>
               <button
                 type="button"
                 onClick={toggleTheme}
@@ -70,7 +60,7 @@ export default function LoginPage() {
               </button>
             </div>
 
-            <h1 className={`${headingFont.className} mt-10 text-[42px] leading-[0.95] sm:mt-16 sm:text-[64px]`}>
+            <h1 className="font-heading mt-10 text-[42px] leading-[0.95] sm:mt-16 sm:text-[64px]">
               С возвращением
             </h1>
             <p className="mt-3 text-[15px] text-[var(--color-muted)]">
@@ -79,7 +69,7 @@ export default function LoginPage() {
 
             <form className="mt-10 space-y-5" onSubmit={handleEmailSubmit}>
               <label className="block">
-                <span className={`${headingFont.className} mb-2 block text-[28px] leading-none sm:text-[34px]`}>Эл. почта</span>
+                <span className="font-heading mb-2 block text-[28px] leading-none sm:text-[34px]">Эл. почта</span>
                 <input
                   type="email"
                   placeholder="Введите email"
@@ -88,7 +78,7 @@ export default function LoginPage() {
               </label>
 
               <label className="block">
-                <span className={`${headingFont.className} mb-2 block text-[28px] leading-none sm:text-[34px]`}>Пароль</span>
+                <span className="font-heading mb-2 block text-[28px] leading-none sm:text-[34px]">Пароль</span>
                 <input
                   type="password"
                   placeholder="********"
@@ -129,7 +119,7 @@ export default function LoginPage() {
                 ) : (
                   <Image src="/googlelogo.svg" alt="Google" width={20} height={20} className="h-5 w-5" />
                 )}
-                <span className={`${headingFont.className} text-xl leading-none sm:text-[34px]`}>
+                <span className="font-heading text-xl leading-none sm:text-[34px]">
                   {isGoogleLoading ? "Перенаправляем..." : "Войти через Google"}
                 </span>
               </button>
@@ -145,7 +135,7 @@ export default function LoginPage() {
                 ) : (
                   <Image src="/githublogo.svg" alt="GitHub" width={20} height={20} className="h-5 w-5" />
                 )}
-                <span className={`${headingFont.className} text-xl leading-none sm:text-[34px]`}>
+                <span className="font-heading text-xl leading-none sm:text-[34px]">
                   {isGithubLoading ? "Перенаправляем..." : "Войти через GitHub"}
                 </span>
               </button>
@@ -172,7 +162,7 @@ export default function LoginPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-black/15" />
           <div className="absolute inset-0 flex items-end p-10 text-white">
             <div>
-              <p className={`${headingFont.className} text-[56px] leading-none`}>Ваш визуал</p>
+              <p className="font-heading text-[56px] leading-none">Ваш визуал</p>
               <p className="mt-3 max-w-[420px] text-sm text-white/85">Замените изображение в /public/login-visual.jpg</p>
             </div>
           </div>
